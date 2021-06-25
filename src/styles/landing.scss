@@ -1,0 +1,106 @@
+main {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // background-color: chartreuse;
+  .video-container {
+    flex: 1;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+
+    // background-color: cornflowerblue;
+    video {
+      height: 100%;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    }
+
+    button {
+      position: absolute;
+      bottom: 20px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.2s ease-in-out;
+
+      &#audio-btn {
+        right: 40%;
+      }
+
+      &#video-btn {
+        left: 40%;
+      }
+
+      svg {
+        font-size: 1.1rem;
+        transform: translateY(10%);
+      }
+    }
+  }
+
+  .room-container {
+    --padding: 1.2rem 3rem;
+    --border-rad: 4px;
+    flex: 1;
+    // background-color: thistle;
+    display: flex;
+    justify-content: center;
+    margin-right: 2rem;
+
+    .form-clamp {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      // background-color: lightpink;
+    }
+
+    form {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+        rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+      // background-color: crimson;
+      &:not(:last-child) {
+        margin-bottom: 2rem;
+      }
+
+      input {
+        flex: 1;
+        font-size: 1.2rem;
+        border: none;
+        padding: var(--padding);
+        border-radius: 0;
+        border-bottom-left-radius: var(--border-rad);
+        border-top-left-radius: var(--border-rad);
+
+        &:focus {
+          outline: none;
+        }
+      }
+      button {
+        border: none;
+        background: white;
+        cursor: pointer;
+        padding: var(--padding);
+        border-radius: 0;
+        border-top-right-radius: var(--border-rad);
+        border-bottom-right-radius: var(--border-rad);
+        // box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 12px;
+        transition: all 0.2s ease-in-out;
+        svg {
+          transform: translateY(15%);
+        }
+      }
+    }
+  }
+}
