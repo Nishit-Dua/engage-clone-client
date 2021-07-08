@@ -5,15 +5,14 @@
   justify-content: center;
   // background-color: chartreuse;
   .video-container {
-    flex: 1;
+    flex: 7;
     position: relative;
-
     display: flex;
     justify-content: center;
 
     // background-color: cornflowerblue;
     video {
-      height: 100%;
+      // object-fit: cover;
       border-radius: 10px;
       box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
         rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
@@ -48,7 +47,7 @@
   .room-container {
     --padding: 1.2rem 3rem;
     --border-rad: 4px;
-    flex: 1;
+    flex: 5;
     // background-color: thistle;
     display: flex;
     justify-content: center;

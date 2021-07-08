@@ -1,5 +1,7 @@
 import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { useAuthContext } from "../context/AuthProvider";
 import "../styles/anonLogin.scss";
 interface Form {
   email: string;
@@ -7,6 +9,8 @@ interface Form {
 }
 
 const AnonLogin: FC = () => {
+  const history = useHistory();
+  const { dispatch } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -17,7 +21,8 @@ const AnonLogin: FC = () => {
 
   const submitHandler: SubmitHandler<Form> = (data, e) => {
     console.log(data);
-    e?.target.reset();
+    dispatch({ type: "ANON-LOGIN", payload: data });
+    history.push("/land");
   };
 
   return (

@@ -1,11 +1,14 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef } from "react";
 import { BiMicrophoneOff, BiCamera } from "react-icons/bi";
 import { FiPlusSquare } from "react-icons/fi";
 import { AiOutlineEnter } from "react-icons/ai";
 import "../styles/landing.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+
 const Landingpage: FC = () => {
   const vidRef = useRef<any>(null);
+  const history = useHistory();
 
   useEffect(() => {
     const getMediaDevices = async () => {
@@ -14,14 +17,10 @@ const Landingpage: FC = () => {
           audio: true,
           video: true,
         });
-        console.log(stream);
         vidRef.current.srcObject = stream;
-        vidRef.current.muted = true;
-        vidRef.current.play();
       } catch (error) {}
     };
     getMediaDevices();
-    console.log(vidRef.current);
   }, []);
 
   // Form Logic
@@ -42,6 +41,8 @@ const Landingpage: FC = () => {
 
   const joinSubmitHandler: SubmitHandler<JoinRoom> = (data, e) => {
     console.log(data);
+    history.push(`/room/${data.room}`);
+
     e?.target.reset();
   };
 
@@ -53,7 +54,7 @@ const Landingpage: FC = () => {
   return (
     <main id="landing">
       <div className="video-container">
-        <video ref={vidRef}></video>
+        <video ref={vidRef} autoPlay muted playsInline></video>
         <button
           id="audio-btn"
           onClick={() => (vidRef.current.muted = !vidRef.current.muted)}
@@ -72,11 +73,11 @@ const Landingpage: FC = () => {
           >
             <input
               type="text"
-              placeholder="Make a new Room"
-              {...joinRegister("room")}
+              placeholder="Join An Existing Room"
+              {...joinRegister("room", { required: true })}
             />
             <button>
-              <FiPlusSquare /> Create
+              <AiOutlineEnter /> Join
             </button>
           </form>
           <form
@@ -85,11 +86,11 @@ const Landingpage: FC = () => {
           >
             <input
               type="text"
-              placeholder="Enter An Existing Room"
-              {...makeRoomRegister("room")}
+              placeholder="Make a new Room"
+              {...makeRoomRegister("room", { required: true })}
             />
             <button>
-              <AiOutlineEnter /> Join
+              <FiPlusSquare /> Create
             </button>
           </form>
         </div>

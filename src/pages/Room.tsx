@@ -2,6 +2,7 @@ import Peer from "simple-peer";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
+import { useAuthContext } from "../context/AuthProvider";
 
 const socket = io("http://localhost:5000");
 
@@ -52,64 +53,74 @@ const Video = ({ peer }: { peer: Peer.Instance }) => {
 };
 
 const Room: FC = () => {
+  const { currentUser } = useAuthContext();
+
   // Note to self Don't be a retard and over complicate things # Note 1
   // const socketRef = useRef(socket);
-
   const [peers, setPeers] = useState<PeerType[]>([]);
   // Fuck that i can't deal with JS closures anymore just use a god damn ref
-  const peersRef = useRef<PeerType[]>([]);
-
+  // const peersRef = useRef<PeerType[]>([]);
+  // Lite I solved this POS
   const userVideo = useRef<HTMLVideoElement>(null);
   const { roomId } = useParams<UrlParams>();
 
   useEffect(() => {
+    const localArrayOfPeers: PeerType[] = [];
+
     console.log(roomId);
-    navigator.mediaDevices.getUserMedia(UserMediaConstraints).then((stream) => {
-      userVideo.current!.srcObject = stream;
-      socket.emit("join-room", roomId);
-      socket.on("all-users", (users) => {
-        const peers: PeerType[] = [];
-        users.forEach((userId: string) => {
-          const peer = createPeer(userId, socket.id, stream);
-          peersRef.current.push({
-            peerId: userId,
-            peer,
+    navigator.mediaDevices
+      .getUserMedia(UserMediaConstraints)
+      .then((stream) => {
+        userVideo.current!.srcObject = stream;
+        socket.emit("join-room", roomId);
+        socket.on("all-users", (users) => {
+          const peers: PeerType[] = [];
+          users.forEach((userId: string) => {
+            const peer = createPeer(userId, socket.id, stream);
+            localArrayOfPeers.push({
+              peerId: userId,
+              peer,
+            });
+            // we need this peers array as if when user joins,server sends both user-joined
+            // and all-users so BT
+            peers.push({
+              peerId: userId,
+              peer,
+            });
           });
-          peers.push({
-            peerId: userId,
-            peer,
-          });
-        });
-        setPeers(peers);
-      });
-
-      socket.on("user-joined", ({ signal, callerId }) => {
-        const peer = addPeer(signal, callerId, stream);
-        peersRef.current.push({
-          peerId: callerId,
-          peer,
+          setPeers(peers);
         });
 
-        setPeers((users) => [...users, { peerId: callerId, peer }]);
-      });
+        socket.on("user-joined", ({ signal, callerId }) => {
+          const peer = addPeer(signal, callerId, stream);
+          localArrayOfPeers.push({
+            peerId: callerId,
+            peer,
+          });
 
-      socket!.on("receiving returned signal", ({ signal, id }) => {
-        const item = peersRef.current.find((p) => p.peerId === id);
-        if (item) item.peer.signal(signal);
-      });
+          setPeers((users) => [...users, { peerId: callerId, peer }]);
+        });
 
-      socket.on("user-left", ({ quiterId }) => {
-        const quiter = peersRef.current.find(
-          (peer) => peer.peerId === quiterId
-        );
-        if (quiter) {
-          quiter.peer.destroy();
-          setPeers((prevPeers) =>
-            prevPeers.filter((peer) => peer.peerId !== quiterId)
+        socket.on("handshake", ({ signal, id }) => {
+          const item = localArrayOfPeers.find((p) => p.peerId === id);
+          if (item) item.peer.signal(signal);
+        });
+
+        socket.on("user-left", ({ quiterId }) => {
+          const quiter = localArrayOfPeers.find(
+            (peer) => peer.peerId === quiterId
           );
-        }
+          if (quiter) {
+            quiter.peer.destroy();
+            setPeers((prevPeers) =>
+              prevPeers.filter((peer) => peer.peerId !== quiterId)
+            );
+          }
+        });
+      })
+      .catch(() => {
+        alert("you need to give permissions for camera/mic!!!\nThen Refresh");
       });
-    });
     // This time we need the dependency array as if the user decides to change the room using URL
     // We'd not be able to remake the connections and shit
   }, [roomId]);
@@ -127,7 +138,7 @@ const Room: FC = () => {
     });
 
     peer.on("signal", (signal) => {
-      socket.emit("sending signal", {
+      socket.emit("signalling", {
         userToConnect,
         callerId,
         signal,
@@ -150,11 +161,10 @@ const Room: FC = () => {
     });
 
     peer.on("signal", (signal) => {
-      socket.emit("returning signal", { signal, callerId });
+      socket.emit("signalling-back", { signal, callerId });
     });
 
     peer.signal(signalRecieved);
-
     return peer;
   };
 
