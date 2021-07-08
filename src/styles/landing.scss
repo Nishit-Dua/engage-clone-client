@@ -1,4 +1,4 @@
-main {
+#landing {
   height: 100vh;
   display: flex;
   align-items: center;
@@ -82,9 +82,11 @@ main {
         border-radius: 0;
         border-bottom-left-radius: var(--border-rad);
         border-top-left-radius: var(--border-rad);
+        transition: background-color 0.5s;
 
         &:focus {
           outline: none;
+          background-color: aliceblue;
         }
       }
       button {

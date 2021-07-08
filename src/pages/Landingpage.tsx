@@ -1,11 +1,10 @@
-import { FC, LegacyRef, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { BiMicrophoneOff, BiCamera } from "react-icons/bi";
 import { FiPlusSquare } from "react-icons/fi";
 import { AiOutlineEnter } from "react-icons/ai";
 import "../styles/landing.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 const Landingpage: FC = () => {
-  const [mediaStream, setMediaStream] = useState<MediaStream>();
   const vidRef = useRef<any>(null);
 
   useEffect(() => {
@@ -16,7 +15,6 @@ const Landingpage: FC = () => {
           video: true,
         });
         console.log(stream);
-        setMediaStream(stream);
         vidRef.current.srcObject = stream;
         vidRef.current.muted = true;
         vidRef.current.play();
@@ -53,7 +51,7 @@ const Landingpage: FC = () => {
   };
 
   return (
-    <main>
+    <main id="landing">
       <div className="video-container">
         <video ref={vidRef}></video>
         <button
