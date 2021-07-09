@@ -34,11 +34,17 @@ const Landingpage: FC = () => {
     room: string;
   }
 
-  const { register: joinRegister, handleSubmit: joinHandleSubmit } =
-    useForm<JoinRoom>();
+  const {
+    register: joinRegister,
+    handleSubmit: joinHandleSubmit,
+    formState: { errors: joinErrors },
+  } = useForm<JoinRoom>();
 
-  const { register: makeRoomRegister, handleSubmit: makeRoomHandleSubmit } =
-    useForm<MakeRoom>();
+  const {
+    register: makeRoomRegister,
+    handleSubmit: makeRoomHandleSubmit,
+    formState: { errors: registerErrors },
+  } = useForm<MakeRoom>();
 
   const joinSubmitHandler: SubmitHandler<JoinRoom> = (data, e) => {
     console.log(data);
@@ -78,12 +84,17 @@ const Landingpage: FC = () => {
               <input
                 type="text"
                 placeholder="Join An Existing Room"
-                {...joinRegister("room", { required: true })}
+                {...joinRegister("room", {
+                  required: "Enter The Room Code To Join",
+                })}
               />
               <button>
                 <AiOutlineEnter /> Join
               </button>
             </form>
+            {joinErrors.room && (
+              <p className="error">{joinErrors.room.message}</p>
+            )}
             <form
               onSubmit={makeRoomHandleSubmit(makeRoomSubmitHandler)}
               autoComplete="off"
@@ -91,12 +102,22 @@ const Landingpage: FC = () => {
               <input
                 type="text"
                 placeholder="Make a new Room"
-                {...makeRoomRegister("room", { required: true })}
+                {...makeRoomRegister("room", {
+                  required: "Enter Anything As Room Code To Create A Room",
+                  maxLength: {
+                    value: 25,
+                    message:
+                      "Room Code must be less than 25 characters long :(",
+                  },
+                })}
               />
               <button>
                 <FiPlusSquare /> Create
               </button>
             </form>
+            {registerErrors.room && (
+              <p className="error">{registerErrors.room.message}</p>
+            )}
           </div>
         </div>
       </main>

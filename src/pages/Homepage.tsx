@@ -1,6 +1,6 @@
 import "../styles/Homepage.scss";
 import firebase from "firebase/app";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { GoPerson } from "react-icons/go";
 import { useHistory } from "react-router-dom";
@@ -12,19 +12,17 @@ import {
 import { useAuthContext } from "../context/AuthProvider";
 
 const Homepage: FC = () => {
-  const { dispatch, currentUser, protectedRouteJoiningError, roomId } =
+  const { dispatch, currentUser, protectedRouteJoiningError, redirectTo } =
     useAuthContext();
   const [error, setError] = useState("");
   const history = useHistory();
 
-  console.log(currentUser?.displayName);
+  useEffect(() => {
+    if (currentUser) history.push("/land");
+  }, [currentUser, history]);
 
   const anonLoginHandler = () => {
-    if (roomId) {
-      history.push(`/room/${roomId}`);
-    } else {
-      history.push("/anonLogin");
-    }
+    history.push("/anonLogin");
   };
 
   const handleLogin = async (provider: firebase.auth.AuthProvider) => {
@@ -34,8 +32,8 @@ const Homepage: FC = () => {
     } else if (res) {
       dispatch({ type: "SET-USER", payload: res });
       console.log(res);
-      if (roomId) {
-        history.push(`/room/${roomId}`);
+      if (redirectTo) {
+        history.push(redirectTo);
       } else {
         history.push("/land");
       }

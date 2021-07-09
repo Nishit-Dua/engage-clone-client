@@ -1,4 +1,4 @@
-import { Redirect, Route, useLocation, useParams } from "react-router-dom";
+import { Redirect, Route, useLocation } from "react-router-dom";
 import { useAuthContext } from "../context/AuthProvider";
 import { useEffect } from "react";
 
@@ -7,16 +7,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const { pathname } = useLocation();
   const { currentUser, dispatch } = useAuthContext();
   useEffect(() => {
-    const pathSplitList = pathname.split("/");
-    if (pathSplitList[pathSplitList.length - 2] === "room")
-      dispatch({
-        type: "REDIRECT-AFTER-LOGIN",
-        payload: { roomId: pathSplitList[pathSplitList.length - 1] },
-      });
+    dispatch({
+      type: "REDIRECT-AFTER-LOGIN",
+      payload: { redirectTo: pathname },
+    });
     if (!currentUser) {
       dispatch({ type: "TRY-JOIN-WITHOUT-LOGIN" });
     }
-  }, []);
+  }, [currentUser, dispatch, pathname]);
 
   return (
     <Route

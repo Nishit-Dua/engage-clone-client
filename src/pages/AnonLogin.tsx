@@ -10,7 +10,7 @@ interface Form {
 
 const AnonLogin: FC = () => {
   const history = useHistory();
-  const { dispatch } = useAuthContext();
+  const { dispatch, redirectTo } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -22,7 +22,11 @@ const AnonLogin: FC = () => {
   const submitHandler: SubmitHandler<Form> = (data, e) => {
     console.log(data);
     dispatch({ type: "ANON-LOGIN", payload: data });
-    history.push("/land");
+    if (redirectTo) {
+      history.push(redirectTo);
+    } else {
+      history.push("/land");
+    }
   };
 
   return (

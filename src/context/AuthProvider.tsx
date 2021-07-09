@@ -11,6 +11,7 @@ type AnonUser = {
   displayName: any;
   email: any;
   isAnonymous: boolean;
+  photoURL?: null;
 };
 
 interface ReturnType extends StateType {
@@ -22,14 +23,14 @@ type StateType = {
   isAuthenticating: boolean;
   currentUser: firebase.User | AnonUser | null;
   protectedRouteJoiningError: string;
-  roomId: string;
+  redirectTo: string;
 };
 
 const authState: StateType = {
   isAuthenticating: true,
   currentUser: null,
   protectedRouteJoiningError: "",
-  roomId: "",
+  redirectTo: "",
 };
 
 const authReducer = (state: StateType, action: DispatchType): StateType => {
@@ -60,7 +61,7 @@ const authReducer = (state: StateType, action: DispatchType): StateType => {
           "You Need To Login Before You can Join The Meet!!!",
       };
     case "REDIRECT-AFTER-LOGIN":
-      return { ...state, roomId: action.payload.roomId };
+      return { ...state, redirectTo: action.payload.redirectTo };
     default:
       return authState;
   }
