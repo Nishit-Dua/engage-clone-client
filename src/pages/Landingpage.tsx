@@ -5,6 +5,7 @@ import { AiOutlineEnter } from "react-icons/ai";
 import "../styles/landing.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Landingpage: FC = () => {
   const vidRef = useRef<any>(null);
@@ -52,50 +53,54 @@ const Landingpage: FC = () => {
   };
 
   return (
-    <main id="landing">
-      <div className="video-container">
-        <video ref={vidRef} autoPlay muted playsInline></video>
-        <button
-          id="audio-btn"
-          onClick={() => (vidRef.current.muted = !vidRef.current.muted)}
-        >
-          <BiMicrophoneOff />
-        </button>
-        <button id="video-btn">
-          <BiCamera />
-        </button>
-      </div>
-      <div className="room-container">
-        <div className="form-clamp">
-          <form
-            onSubmit={joinHandleSubmit(joinSubmitHandler)}
-            autoComplete="off"
+    <>
+      <Navbar />
+
+      <main id="landing">
+        <div className="video-container">
+          <video ref={vidRef} autoPlay muted playsInline></video>
+          <button
+            id="audio-btn"
+            onClick={() => (vidRef.current.muted = !vidRef.current.muted)}
           >
-            <input
-              type="text"
-              placeholder="Join An Existing Room"
-              {...joinRegister("room", { required: true })}
-            />
-            <button>
-              <AiOutlineEnter /> Join
-            </button>
-          </form>
-          <form
-            onSubmit={makeRoomHandleSubmit(makeRoomSubmitHandler)}
-            autoComplete="off"
-          >
-            <input
-              type="text"
-              placeholder="Make a new Room"
-              {...makeRoomRegister("room", { required: true })}
-            />
-            <button>
-              <FiPlusSquare /> Create
-            </button>
-          </form>
+            <BiMicrophoneOff />
+          </button>
+          <button id="video-btn">
+            <BiCamera />
+          </button>
         </div>
-      </div>
-    </main>
+        <div className="room-container">
+          <div className="form-clamp">
+            <form
+              onSubmit={joinHandleSubmit(joinSubmitHandler)}
+              autoComplete="off"
+            >
+              <input
+                type="text"
+                placeholder="Join An Existing Room"
+                {...joinRegister("room", { required: true })}
+              />
+              <button>
+                <AiOutlineEnter /> Join
+              </button>
+            </form>
+            <form
+              onSubmit={makeRoomHandleSubmit(makeRoomSubmitHandler)}
+              autoComplete="off"
+            >
+              <input
+                type="text"
+                placeholder="Make a new Room"
+                {...makeRoomRegister("room", { required: true })}
+              />
+              <button>
+                <FiPlusSquare /> Create
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </>
   );
 };
 

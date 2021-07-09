@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { useHistory } from "react-router-dom";
 
 type DispatchType = {
   type: string;
@@ -22,11 +21,15 @@ interface ReturnType extends StateType {
 type StateType = {
   isAuthenticating: boolean;
   currentUser: firebase.User | AnonUser | null;
+  protectedRouteJoiningError: string;
+  roomId: string;
 };
 
 const authState: StateType = {
   isAuthenticating: true,
   currentUser: null,
+  protectedRouteJoiningError: "",
+  roomId: "",
 };
 
 const authReducer = (state: StateType, action: DispatchType): StateType => {
@@ -34,7 +37,11 @@ const authReducer = (state: StateType, action: DispatchType): StateType => {
     case "GET-USER":
       return { ...state, currentUser: action.payload, isAuthenticating: false };
     case "SET-USER":
-      return { ...state, currentUser: action.payload };
+      return {
+        ...state,
+        currentUser: action.payload,
+        protectedRouteJoiningError: "",
+      };
     case "ANON-LOGIN":
       const anonUser = {
         displayName: action.payload.name,
@@ -46,6 +53,14 @@ const authReducer = (state: StateType, action: DispatchType): StateType => {
     case "SIGN-OUT":
       localStorage.removeItem("anon-user");
       return { ...state, currentUser: null };
+    case "TRY-JOIN-WITHOUT-LOGIN":
+      return {
+        ...state,
+        protectedRouteJoiningError:
+          "You Need To Login Before You can Join The Meet!!!",
+      };
+    case "REDIRECT-AFTER-LOGIN":
+      return { ...state, roomId: action.payload.roomId };
     default:
       return authState;
   }
@@ -54,7 +69,6 @@ const authReducer = (state: StateType, action: DispatchType): StateType => {
 const AuthContext = React.createContext<ReturnType | null>(null);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const history = useHistory();
   const [state, dispatch] = useReducer(authReducer, authState);
 
   useEffect(() => {
@@ -72,7 +86,6 @@ const AuthProvider: React.FC = ({ children }) => {
     try {
       await firebase.auth().signOut();
       dispatch({ type: "SIGN-OUT" });
-      history.push("/land");
     } catch (err) {
       alert("error logining out, check console");
       console.log(err);

@@ -1,16 +1,21 @@
 import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FiSend } from "react-icons/fi";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { useAuthContext } from "../context/AuthProvider";
 import "../styles/chat.scss";
 
 interface Chat {
   message: string;
 }
 
-const ChatLibrary: FC = () => {
+const ChatLibrary: FC<{ roomId: string }> = ({ roomId }) => {
   const { register, handleSubmit, reset } = useForm<Chat>({
     shouldFocusError: true,
   });
+
+  const { currentUser, dispatch } = useAuthContext();
 
   const submitHandler: SubmitHandler<Chat> = async (data) => {
     reset({ message: "" });

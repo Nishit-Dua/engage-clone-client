@@ -4,6 +4,7 @@ import AnonLogin from "./pages/AnonLogin";
 import Homepage from "./pages/Homepage";
 import Landingpage from "./pages/Landingpage";
 import Room from "./pages/Room";
+import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
   return (
@@ -12,9 +13,14 @@ function App() {
         <Switch>
           <Route path="/" exact children={<Homepage />} />
           <Route path="/anonLogin" exact children={<AnonLogin />} />
-          <Route path="/test" exact children={<ChatLibrary />} />
           <Route path="/land" exact children={<Landingpage />} />
-          <Route path="/room/:roomId" exact children={<Room />} />
+          <PrivateRoute
+            component={() => <ChatLibrary roomId={"test"} />}
+            path="/test"
+            exact
+            children={<ChatLibrary roomId={"test"} />}
+          />
+          <PrivateRoute path="/room/:roomId" exact component={Room} />
         </Switch>
       </Router>
     </div>
