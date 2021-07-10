@@ -56,6 +56,7 @@ const ChatLibrary: FC<{
   }, [roomId]);
 
   useEffect(() => {
+    console.log(messages);
     scrollToNewMessageRef.current?.scrollIntoView({
       behavior: "smooth",
     });
@@ -142,7 +143,6 @@ const ChatMessage: FC<ChatMessageProps> = ({
   senderPfp,
   time,
 }) => {
-  console.log(time.toString());
   return (
     <div className="message">
       <img

@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../context/AuthProvider";
 import { useAppContext } from "../context/AppProvider";
+import { useHistory } from "react-router-dom";
 
 const socket = io("http://localhost:5000");
 
@@ -55,24 +56,55 @@ const Video = ({ peer, name }: { peer: Peer.Instance; name: string }) => {
 
 const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
   const { currentUser } = useAuthContext();
-  const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
+  const { isMicOn, isVideoOn, leaveVideoChatTrigger, chatRoomTrigger } =
+    useAppContext();
 
-  // Note to self Don't be a retard and over complicate things # Note 1
-  // const socketRef = useRef(socket);
+  const history = useHistory();
   const [peers, setPeers] = useState<PeerType[]>([]);
-  // Fuck that i can't deal with JS closures anymore just use a god damn ref
-  // const peersRef = useRef<PeerType[]>([]);
-  // Lite I solved this POS
   const userVideo = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream>();
+
+  useEffect(() => {
+    if (streamRef.current)
+      streamRef.current.getAudioTracks()[0].enabled = isMicOn;
+  }, [isMicOn]);
+
+  useEffect(() => {
+    if (streamRef.current)
+      streamRef.current.getVideoTracks()[0].enabled = isVideoOn;
+  }, [isVideoOn]);
+
+  useEffect(() => {
+    if (leaveVideoChatTrigger) {
+      // removes shit from state
+      peers.forEach((peer) => {
+        peer.peer.destroy();
+      });
+
+      socket.emit("manual-disconnect", { id: socket.id });
+      streamRef.current?.getTracks().forEach(function (track) {
+        track.stop();
+      });
+
+      if (chatRoomTrigger) {
+        history.push(`/chatroom/${roomId}`);
+      } else {
+        history.push("/");
+      }
+    }
+    // Memory leak fix, do not call an event which would lead to
+    // change this in this use effet
+  }, [leaveVideoChatTrigger, chatRoomTrigger, peers, history, roomId]);
 
   useEffect(() => {
     const localArrayOfPeers: PeerType[] = [];
 
-    console.log(roomId);
     navigator.mediaDevices
       .getUserMedia(UserMediaConstraints)
       .then((stream) => {
-        userVideo.current!.srcObject = stream;
+        // eslint-ignore
+        streamRef.current = stream;
+        userVideo.current!.srcObject = streamRef.current;
         socket.emit("join-room", { roomId, name: currentUser?.displayName });
         socket.on("all-users", (users: { id: string; name: string }[]) => {
           const peers: PeerType[] = [];
@@ -80,7 +112,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
             const peer = createPeer(
               user.id,
               socket.id,
-              stream,
+              streamRef.current!,
               currentUser?.displayName
             );
             localArrayOfPeers.push({
@@ -88,8 +120,6 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
               peer,
               name: user.name,
             });
-            // we need this peers array as if when user joins,server sends both user-joined
-            // and all-users so BT
             peers.push({
               peerId: user.id,
               peer,
@@ -100,7 +130,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
         });
 
         socket.on("user-joined", ({ signal, callerId, name }) => {
-          const peer = addPeer(signal, callerId, stream);
+          const peer = addPeer(signal, callerId, streamRef.current!);
           localArrayOfPeers.push({
             peerId: callerId,
             peer,
@@ -130,9 +160,10 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
       .catch(() => {
         alert("you need to give permissions for camera/mic!!!\nThen Refresh");
       });
-    // This time we need the dependency array as if the user decides to change the room using URL
-    // We'd not be able to remake the connections and shit
-  }, [currentUser?.displayName, roomId]);
+    // fucking piece of shit es-lint recomendation had me a memory leak
+    // which took more than 1.5 hours to fix
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?.displayName]);
 
   const createPeer = (
     userToConnect: string,
@@ -182,8 +213,6 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
   return (
     <>
       <video muted ref={userVideo} autoPlay playsInline id="my-video" />
-      {/* <h2 style={{ display: "inline" }}>{currentUser?.displayName}</h2> */}
-      {/* Note 2 don't use fucking indexes as keys! */}
       {peers.map((peer) => {
         return <Video key={peer.peerId} peer={peer.peer} name={peer.name} />;
       })}
@@ -192,8 +221,3 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
 };
 
 export default VideoChat;
-
-// Note 1: you dont need to define everyfucking think inside the react component
-// Problem was socket when defined inside the component doesn't get's registered when
-// the useEffect fires onMount, my solution was to use a reference to the socket 🤦🏼‍♂️
-// a simpler solution was just to connect before the components mounts and no need for reference.

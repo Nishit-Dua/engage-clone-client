@@ -10,12 +10,15 @@ import {
   socialMediaProvider,
 } from "../utils/auth-firebase";
 import { useAuthContext } from "../context/AuthProvider";
+import { useDisconnect } from "../utils/useDisconnect";
 
 const Homepage: FC = () => {
   const { dispatch, currentUser, protectedRouteJoiningError, redirectTo } =
     useAuthContext();
   const [error, setError] = useState("");
   const history = useHistory();
+
+  useDisconnect();
 
   useEffect(() => {
     if (currentUser) history.push("/land");

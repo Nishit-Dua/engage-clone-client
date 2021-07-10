@@ -6,11 +6,15 @@ const AppContext = React.createContext<null | ReturnType>(null);
 export type StateType = {
   isMicOn: boolean;
   isVideoOn: boolean;
+  leaveVideoChatTrigger: boolean;
+  chatRoomTrigger: boolean;
 };
 
 export const initialState: StateType = {
   isMicOn: true,
   isVideoOn: true,
+  leaveVideoChatTrigger: false,
+  chatRoomTrigger: false,
 };
 
 const AppProvider: React.FC = ({ children }) => {

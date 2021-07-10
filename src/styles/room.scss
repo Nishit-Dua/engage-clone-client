@@ -8,29 +8,30 @@
 
   .controls {
     position: absolute;
-    z-index: 2;
+    z-index: 5;
     left: 50%;
     bottom: 7%;
     transform: translate(-50%);
 
     width: auto;
     padding: 1rem 4rem;
-    background-color: #fff;
+    background-color: rgb(46, 46, 46);
     display: flex;
-    gap: 5rem;
+    gap: 2rem;
     align-items: center;
     justify-content: space-between;
 
     button {
       border: none;
-      background: burlywood;
+      background-color: rgb(255, 201, 135);
       cursor: pointer;
       transition: all 0.1s ease-in-out;
-      padding: 1rem 2rem;
+      padding: 0.8rem 1.5rem;
       font-size: 1rem;
 
       &:hover {
-        // font-size: 1.2rem;
+        background-color: rgb(223, 167, 94);
+        padding: 0.8rem 2rem;
       }
     }
   }

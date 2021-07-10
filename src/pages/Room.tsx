@@ -15,7 +15,7 @@ type UrlParams = {
 
 const Room: FC = () => {
   const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
-  const [isChatOpen, setIsChatOpen] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const { roomId } = useParams<UrlParams>();
 
@@ -36,13 +36,13 @@ const Room: FC = () => {
         <button onClick={() => dispatchApp({ type: "VIDEO-TOGGLE" })}>
           {isVideoOn ? <FiVideo /> : <FiVideoOff />}
         </button>
-        <button>
+        <button onClick={() => dispatchApp({ type: "DECONNECT-FROM-VIDEO" })}>
           <MdCallEnd />
         </button>
         <button onClick={() => setIsChatOpen((s) => !s)}>
           <BiChat />
         </button>
-        <button>
+        <button onClick={() => dispatchApp({ type: "GO-TO-CHAT-ROOM" })}>
           <RiChatVoiceLine />
         </button>
       </div>
