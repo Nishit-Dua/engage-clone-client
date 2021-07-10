@@ -11,13 +11,15 @@ const ChatRoom: FC = () => {
   const { roomId } = useParams<UrlParams>();
   useDisconnect();
   return (
-    <ChatLibrary
-      customClass="chat-room"
-      roomId={roomId}
-      setIsChatOpen={() => {
-        return null;
-      }}
-    />
+    <main className="chating-room">
+      <ChatLibrary
+        customClass="chat-room"
+        roomId={roomId}
+        setIsChatOpen={() => {
+          return null;
+        }}
+      />
+    </main>
   );
 };
 

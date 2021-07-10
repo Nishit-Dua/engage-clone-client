@@ -8,6 +8,7 @@ import "../styles/chat.scss";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import { ImCross } from "react-icons/im";
+import { BsCameraVideo } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
 
 type Chat = {
@@ -123,7 +124,7 @@ const ChatLibrary: FC<{
           Send <FiSend />
         </button>
         <button className="join-back" onClick={joinBackHander}>
-          Join Back
+          Join Back <BsCameraVideo />
         </button>
       </form>
     </aside>

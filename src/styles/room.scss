@@ -21,6 +21,14 @@
     align-items: center;
     justify-content: space-between;
 
+    .off {
+      color: rgb(190, 35, 35);
+    }
+
+    .redirect {
+      color: rgb(0, 43, 122);
+    }
+
     button {
       border: none;
       background-color: rgb(255, 201, 135);

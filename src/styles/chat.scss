@@ -1,9 +1,9 @@
-// main.chat-room {
-//   background-color: blue;
-// }
+main.chating-room {
+  background-color: rgb(92, 92, 92);
+}
 
 .chat-room {
-  --aside-bgcol: rgb(240, 240, 240);
+  --aside-bgcol: rgb(255, 255, 255);
   padding: 0.5rem 10vw;
   width: 100vw !important;
 
@@ -25,7 +25,7 @@ aside {
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
-  padding: 0.5rem;
+  padding: 1rem;
   position: relative;
   transition: all 0.3s ease-in-out;
   height: 100vh;
@@ -39,8 +39,8 @@ aside {
 
   .close-chat {
     position: absolute;
-    top: 15px;
-    right: 25px;
+    top: 1.5rem;
+    right: 2rem;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -103,6 +103,7 @@ aside {
     }
 
     button {
+      background-color: var(--aside-bgcol);
       border: none;
       cursor: pointer;
       width: 25%;

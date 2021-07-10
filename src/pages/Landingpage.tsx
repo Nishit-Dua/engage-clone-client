@@ -15,10 +15,18 @@ import Navbar from "../components/Navbar";
 import { useAppContext } from "../context/AppProvider";
 
 const Landingpage: FC = () => {
-  const vidRef = useRef<any>(null);
+  const vidRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream>();
   const history = useHistory();
 
   const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
+
+  useEffect(() => {
+    if (streamRef.current) {
+      streamRef.current.getAudioTracks()[0].enabled = isMicOn;
+      streamRef.current.getVideoTracks()[0].enabled = isVideoOn;
+    }
+  }, [isMicOn, isVideoOn]);
 
   useEffect(() => {
     const getMediaDevices = async () => {
@@ -27,7 +35,8 @@ const Landingpage: FC = () => {
           audio: true,
           video: true,
         });
-        vidRef.current.srcObject = stream;
+        streamRef.current = stream;
+        if (vidRef.current) vidRef.current.srcObject = streamRef.current;
       } catch (error) {}
     };
     getMediaDevices();

@@ -4,8 +4,11 @@ import { io } from "socket.io-client";
 import { useAuthContext } from "../context/AuthProvider";
 import { useAppContext } from "../context/AppProvider";
 import { useHistory } from "react-router-dom";
+import { __prod__ } from "../utils/const";
 
-const socket = io("http://localhost:5000");
+const socket = __prod__
+  ? io("https://engage-clone-server.herokuapp.com/")
+  : io("http://localhost:5000");
 
 type PeerType = {
   peerId: string;

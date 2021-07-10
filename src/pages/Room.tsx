@@ -31,19 +31,19 @@ const Room: FC = () => {
       />
       <div className="controls">
         <button onClick={() => dispatchApp({ type: "MIC-TOGGLE" })}>
-          {isMicOn ? <FiMic /> : <FiMicOff />}
+          {isMicOn ? <FiMic /> : <FiMicOff className="off" />}
         </button>
         <button onClick={() => dispatchApp({ type: "VIDEO-TOGGLE" })}>
-          {isVideoOn ? <FiVideo /> : <FiVideoOff />}
+          {isVideoOn ? <FiVideo /> : <FiVideoOff className="off" />}
         </button>
         <button onClick={() => dispatchApp({ type: "DECONNECT-FROM-VIDEO" })}>
-          <MdCallEnd />
+          <MdCallEnd className="off" />
         </button>
         <button onClick={() => setIsChatOpen((s) => !s)}>
           <BiChat />
         </button>
         <button onClick={() => dispatchApp({ type: "GO-TO-CHAT-ROOM" })}>
-          <RiChatVoiceLine />
+          <RiChatVoiceLine className="redirect" />
         </button>
       </div>
     </main>
