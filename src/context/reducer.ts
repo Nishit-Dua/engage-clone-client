@@ -6,21 +6,18 @@ type DispatchType = {
 };
 
 // Add Dispatch "type" Actions Here To add type support (and use in TS)
-type Actions = "ADD" | "FETCH" | "DELETE";
+type Actions = "MIC-TOGGLE" | "VIDEO-TOGGLE";
 
 export interface ReturnType extends StateType {
-  dispatch: React.Dispatch<DispatchType>;
+  dispatchApp: React.Dispatch<DispatchType>;
 }
 
 export const reducer = (state: StateType, action: DispatchType): StateType => {
   switch (action.type) {
-    case "ADD":
-      return { ...state };
-    case "FETCH":
-      return { ...state };
-    case "DELETE":
-      return { ...state };
-
+    case "MIC-TOGGLE":
+      return { ...state, isMicOn: !state.isMicOn };
+    case "VIDEO-TOGGLE":
+      return { ...state, isVideoOn: !state.isVideoOn };
     default:
       return state;
   }

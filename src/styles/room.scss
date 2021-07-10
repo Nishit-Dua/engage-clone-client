@@ -1,0 +1,75 @@
+#room {
+  background-color: rgb(31, 31, 31);
+  display: flex;
+  justify-content: space-between;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  .controls {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: 7%;
+    transform: translate(-50%);
+
+    width: auto;
+    padding: 1rem 4rem;
+    background-color: #fff;
+    display: flex;
+    gap: 5rem;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      border: none;
+      background: burlywood;
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+
+      &:hover {
+        // font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+.video-grid {
+  padding: 1rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+
+  .video-container {
+    --video-size: 240px;
+    height: var(--video-size);
+    width: calc(var(--video-size) * 16 / 9);
+    position: relative;
+    video {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    p {
+      position: absolute;
+      color: #fff;
+      text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      bottom: 10px;
+      left: 10px;
+    }
+  }
+}
+
+#my-video {
+  --my-vid-size: 6rem;
+  position: absolute;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 15px;
+  left: 3rem;
+  bottom: 3rem;
+  height: var(--my-vid-size);
+  width: calc(var(--my-vid-size) * 16 / 9);
+}

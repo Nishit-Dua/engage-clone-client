@@ -2,6 +2,7 @@ import Peer from "simple-peer";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../context/AuthProvider";
+import { useAppContext } from "../context/AppProvider";
 
 const socket = io("http://localhost:5000");
 
@@ -19,10 +20,6 @@ const iceServers = [
   { urls: "stun:stun4.l.google.com:19302" },
 ];
 
-const VideoStyle: React.CSSProperties = {
-  height: "480px",
-};
-
 const UserMediaConstraints: MediaStreamConstraints = {
   video: {
     height: {
@@ -30,31 +27,35 @@ const UserMediaConstraints: MediaStreamConstraints = {
       ideal: 360,
       max: 720,
     },
+    facingMode: {
+      exact: "user",
+    },
   },
   audio: true,
 };
 
 const Video = ({ peer, name }: { peer: Peer.Instance; name: string }) => {
-  const ref = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     peer.on("stream", (stream) => {
-      ref.current!.srcObject = stream;
+      videoRef.current!.srcObject = stream;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // we dont need to add peer as a dependency array because we manually cleanup
   // the disconneted users so after the repaint the components unmounts itself
   return (
-    <>
-      <video playsInline autoPlay ref={ref} style={VideoStyle} />
-      {/* <h2 style={{ display: "inline" }}>{name}</h2> */}
-    </>
+    <div className="video-container">
+      <video playsInline autoPlay ref={videoRef} />
+      <p>{name}</p>
+    </div>
   );
 };
 
-const Room: FC<{ roomId: string }> = ({ roomId }) => {
+const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
   const { currentUser } = useAuthContext();
+  const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
 
   // Note to self Don't be a retard and over complicate things # Note 1
   // const socketRef = useRef(socket);
@@ -179,18 +180,18 @@ const Room: FC<{ roomId: string }> = ({ roomId }) => {
   };
 
   return (
-    <div>
-      <video muted ref={userVideo} autoPlay playsInline style={VideoStyle} />
+    <>
+      <video muted ref={userVideo} autoPlay playsInline id="my-video" />
       {/* <h2 style={{ display: "inline" }}>{currentUser?.displayName}</h2> */}
       {/* Note 2 don't use fucking indexes as keys! */}
       {peers.map((peer) => {
         return <Video key={peer.peerId} peer={peer.peer} name={peer.name} />;
       })}
-    </div>
+    </>
   );
 };
 
-export default Room;
+export default VideoChat;
 
 // Note 1: you dont need to define everyfucking think inside the react component
 // Problem was socket when defined inside the component doesn't get's registered when

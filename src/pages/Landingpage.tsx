@@ -1,15 +1,24 @@
 import { FC, useEffect, useRef } from "react";
-import { BiMicrophoneOff, BiCamera } from "react-icons/bi";
-import { FiPlusSquare } from "react-icons/fi";
+import {
+  FiPlusSquare,
+  FiMic,
+  FiMicOff,
+  FiVideo,
+  FiVideoOff,
+} from "react-icons/fi";
+
 import { AiOutlineEnter } from "react-icons/ai";
 import "../styles/landing.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAppContext } from "../context/AppProvider";
 
 const Landingpage: FC = () => {
   const vidRef = useRef<any>(null);
   const history = useHistory();
+
+  const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
 
   useEffect(() => {
     const getMediaDevices = async () => {
@@ -61,18 +70,20 @@ const Landingpage: FC = () => {
   return (
     <>
       <Navbar />
-
       <main id="landing">
         <div className="video-container">
           <video ref={vidRef} autoPlay muted playsInline></video>
           <button
             id="audio-btn"
-            onClick={() => (vidRef.current.muted = !vidRef.current.muted)}
+            onClick={() => dispatchApp({ type: "MIC-TOGGLE" })}
           >
-            <BiMicrophoneOff />
+            {isMicOn ? <FiMic /> : <FiMicOff />}
           </button>
-          <button id="video-btn">
-            <BiCamera />
+          <button
+            id="video-btn"
+            onClick={() => dispatchApp({ type: "VIDEO-TOGGLE" })}
+          >
+            {isVideoOn ? <FiVideo /> : <FiVideoOff />}
           </button>
         </div>
         <div className="room-container">

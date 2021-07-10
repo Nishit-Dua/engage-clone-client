@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import ChatLibrary from "./components/ChatLibrary";
 import AnonLogin from "./pages/AnonLogin";
+import ChatRoom from "./pages/ChatRoom";
 import Homepage from "./pages/Homepage";
 import Landingpage from "./pages/Landingpage";
 import Room from "./pages/Room";
@@ -14,13 +14,8 @@ function App() {
           <Route path="/" exact children={<Homepage />} />
           <Route path="/anonLogin" exact children={<AnonLogin />} />
           <Route path="/land" exact children={<Landingpage />} />
-          <PrivateRoute
-            component={() => <ChatLibrary roomId={"test"} />}
-            path="/test"
-            exact
-            children={<ChatLibrary roomId={"test"} />}
-          />
           <PrivateRoute path="/room/:roomId" exact component={Room} />
+          <PrivateRoute path="/chatroom/:roomId" exact component={ChatRoom} />
         </Switch>
       </Router>
     </div>
