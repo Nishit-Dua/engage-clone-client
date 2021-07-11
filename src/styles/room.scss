@@ -1,5 +1,6 @@
 #room {
-  background-color: rgb(31, 31, 31);
+  background: rgb(29, 29, 29);
+  background: linear-gradient(90deg, rgb(29, 29, 29) 0%, rgb(48, 48, 48) 100%);
   display: flex;
   justify-content: space-between;
   min-height: 100vh;
@@ -21,6 +22,22 @@
     align-items: center;
     justify-content: space-between;
 
+    @media only screen and (max-width: 900px) {
+      padding: 0.5rem 2rem;
+      gap: 1rem;
+
+      button {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+        position: relative;
+
+        &:hover {
+          background-color: rgb(223, 167, 94);
+          padding: 0.6rem 1.5rem;
+        }
+      }
+    }
+
     .off {
       color: rgb(190, 35, 35);
     }
@@ -36,6 +53,7 @@
       transition: all 0.1s ease-in-out;
       padding: 0.8rem 1.5rem;
       font-size: 1rem;
+      position: relative;
 
       &:hover {
         background-color: rgb(223, 167, 94);
@@ -47,9 +65,18 @@
 
 .video-grid {
   padding: 1rem;
+  flex: 1;
+  height: fit-content;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -12rem;
   gap: 2rem;
   flex-wrap: wrap;
+
+  @media only screen and (max-width: 900px) {
+    margin-top: 0rem;
+  }
 
   .video-container {
     --video-size: 240px;
@@ -70,15 +97,38 @@
     }
   }
 }
-
-#my-video {
+.my-video-container {
   --my-vid-size: 6rem;
+  z-index: 5;
   position: absolute;
-  object-fit: cover;
-  overflow: hidden;
-  border-radius: 15px;
-  left: 3rem;
-  bottom: 3rem;
   height: var(--my-vid-size);
   width: calc(var(--my-vid-size) * 16 / 9);
+  overflow: hidden;
+  border: 1px dashed white;
+  border-radius: 5px;
+  left: 3rem;
+  bottom: 3rem;
+
+  @media only screen and (max-width: 900px) {
+    --my-vid-size: 4rem;
+
+    border-radius: 3px;
+    left: 3rem;
+    top: 2rem;
+    border: 1px solid white;
+  }
+  #my-video {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+  .no-vid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(46, 46, 46);
+    color: rgb(255, 85, 85);
+  }
 }

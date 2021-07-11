@@ -73,6 +73,7 @@ const Landingpage: FC = () => {
 
   const makeRoomSubmitHandler: SubmitHandler<MakeRoom> = (data, e) => {
     console.log(data);
+    history.push(`/chatroom/${data.room}`);
     e?.target.reset();
   };
 
@@ -81,19 +82,22 @@ const Landingpage: FC = () => {
       <Navbar />
       <main id="landing">
         <div className="video-container">
+          {!isVideoOn && <div className="no-vid"></div>}
           <video ref={vidRef} autoPlay muted playsInline></video>
-          <button
-            id="audio-btn"
-            onClick={() => dispatchApp({ type: "MIC-TOGGLE" })}
-          >
-            {isMicOn ? <FiMic /> : <FiMicOff />}
-          </button>
-          <button
-            id="video-btn"
-            onClick={() => dispatchApp({ type: "VIDEO-TOGGLE" })}
-          >
-            {isVideoOn ? <FiVideo /> : <FiVideoOff />}
-          </button>
+          <div className="controls">
+            <button
+              id="audio-btn"
+              onClick={() => dispatchApp({ type: "MIC-TOGGLE" })}
+            >
+              {isMicOn ? <FiMic /> : <FiMicOff className="off" />}
+            </button>
+            <button
+              id="video-btn"
+              onClick={() => dispatchApp({ type: "VIDEO-TOGGLE" })}
+            >
+              {isVideoOn ? <FiVideo /> : <FiVideoOff className="off" />}
+            </button>
+          </div>
         </div>
         <div className="room-container">
           <div className="form-clamp">
@@ -103,13 +107,13 @@ const Landingpage: FC = () => {
             >
               <input
                 type="text"
-                placeholder="Join An Existing Room"
+                placeholder="Enter Code To Join The Call"
                 {...joinRegister("room", {
                   required: "Enter The Room Code To Join",
                 })}
               />
               <button>
-                <AiOutlineEnter /> Join
+                <AiOutlineEnter /> Join Meet
               </button>
             </form>
             {joinErrors.room && (
@@ -121,7 +125,7 @@ const Landingpage: FC = () => {
             >
               <input
                 type="text"
-                placeholder="Make a new Room"
+                placeholder="Join Just The Chat Room"
                 {...makeRoomRegister("room", {
                   required: "Enter Anything As Room Code To Create A Room",
                   maxLength: {
@@ -132,7 +136,7 @@ const Landingpage: FC = () => {
                 })}
               />
               <button>
-                <FiPlusSquare /> Create
+                <AiOutlineEnter /> Join Chat
               </button>
             </form>
             {registerErrors.room && (

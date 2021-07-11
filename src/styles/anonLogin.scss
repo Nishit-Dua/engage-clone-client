@@ -28,10 +28,12 @@
       padding: var(--padding);
       border-radius: var(--border-rad);
       // background-color: darkslateblue;
+      transition: all 0.2s ease-in-out;
 
       &:focus {
         outline: none;
-        background-color: aliceblue;
+        background-color: rgb(221, 238, 255);
+        color: rgb(59, 59, 59);
       }
     }
 
@@ -51,6 +53,11 @@
       box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 12px;
       transition: all 0.2s ease-in-out;
       // background-color: teal;
+
+      &:hover {
+        background-color: rgb(29, 29, 29);
+        color: white;
+      }
 
       svg {
         transform: translateY(15%);

@@ -1,11 +1,18 @@
 main.chating-room {
-  background-color: rgb(92, 92, 92);
+  background: rgb(72, 122, 255);
+  background: linear-gradient(
+    45deg,
+    rgba(72, 122, 255, 1) 0%,
+    rgba(0, 218, 255, 1) 100%,
+    rgba(21, 154, 164, 1) 100%
+  );
 }
 
 .chat-room {
   --aside-bgcol: rgb(255, 255, 255);
   padding: 0.5rem 10vw;
   width: 100vw !important;
+  position: relative;
 
   .close-chat {
     display: none;
@@ -18,6 +25,7 @@ main.chating-room {
 
 aside {
   --aside-bgcol: rgb(238, 239, 241);
+  z-index: 10;
 
   transform: translateX(100%);
   opacity: 0;
@@ -31,10 +39,35 @@ aside {
   height: 100vh;
   width: 0;
 
+  @media only screen and (max-width: 900px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 100vw !important;
+    transform: translateX(0);
+    padding: 3rem;
+
+    .close-chat {
+      top: 4rem !important;
+      right: 4rem !important;
+    }
+
+    &.open {
+      height: 100vh;
+      // transform: translateX(0);
+      // opacity: 1;
+    }
+  }
+
   &.open {
     transform: translateX(0);
     opacity: 1;
     width: 350px;
+  }
+
+  &.close {
+    padding: 0;
   }
 
   .close-chat {

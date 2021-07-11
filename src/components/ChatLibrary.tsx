@@ -57,7 +57,6 @@ const ChatLibrary: FC<{
   }, [roomId]);
 
   useEffect(() => {
-    console.log(messages);
     scrollToNewMessageRef.current?.scrollIntoView({
       behavior: "smooth",
     });

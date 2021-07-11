@@ -5,6 +5,7 @@ import { useAuthContext } from "../context/AuthProvider";
 import { useAppContext } from "../context/AppProvider";
 import { useHistory } from "react-router-dom";
 import { __prod__ } from "../utils/const";
+import { FiVideoOff } from "react-icons/fi";
 
 const socket = __prod__
   ? io("https://engage-clone-server.herokuapp.com/")
@@ -166,7 +167,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
     // fucking piece of shit es-lint recomendation had me a memory leak
     // which took more than 1.5 hours to fix
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser?.displayName]);
+  }, []);
 
   const createPeer = (
     userToConnect: string,
@@ -215,7 +216,10 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
 
   return (
     <>
-      <video muted ref={userVideo} autoPlay playsInline id="my-video" />
+      <div className="my-video-container">
+        <video muted ref={userVideo} autoPlay playsInline id="my-video" />
+        {!isVideoOn && <FiVideoOff className="no-vid" />}
+      </div>
       {peers.map((peer) => {
         return <Video key={peer.peerId} peer={peer.peer} name={peer.name} />;
       })}

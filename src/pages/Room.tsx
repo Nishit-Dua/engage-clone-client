@@ -39,11 +39,11 @@ const Room: FC = () => {
         <button onClick={() => dispatchApp({ type: "DECONNECT-FROM-VIDEO" })}>
           <MdCallEnd className="off" />
         </button>
-        <button onClick={() => setIsChatOpen((s) => !s)}>
-          <BiChat />
-        </button>
         <button onClick={() => dispatchApp({ type: "GO-TO-CHAT-ROOM" })}>
           <RiChatVoiceLine className="redirect" />
+        </button>
+        <button onClick={() => setIsChatOpen((s) => !s)}>
+          <BiChat />
         </button>
       </div>
     </main>
