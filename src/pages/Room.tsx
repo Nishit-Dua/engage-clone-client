@@ -17,7 +17,8 @@ const Room: FC = () => {
   const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const { roomId } = useParams<UrlParams>();
+  let { roomId } = useParams<UrlParams>();
+  roomId = roomId.toLowerCase();
 
   return (
     <main id="room">

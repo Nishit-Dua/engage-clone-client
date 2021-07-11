@@ -44,7 +44,7 @@ aside {
     top: 0;
     left: 0;
     height: 0;
-    width: 100vw !important;
+    min-width: 100vw !important;
     transform: translateX(0);
     padding: 3rem;
 

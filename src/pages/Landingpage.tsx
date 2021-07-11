@@ -1,11 +1,5 @@
 import { FC, useEffect, useRef } from "react";
-import {
-  FiPlusSquare,
-  FiMic,
-  FiMicOff,
-  FiVideo,
-  FiVideoOff,
-} from "react-icons/fi";
+import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
 
 import { AiOutlineEnter } from "react-icons/ai";
 import "../styles/landing.scss";
@@ -13,6 +7,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAppContext } from "../context/AppProvider";
+
+// NOTE TO SELF I decided to be done with registering a room and repurposed the variables for
+// ChatRoom but DIDN'T change the variables because reason :P
 
 const Landingpage: FC = () => {
   const vidRef = useRef<HTMLVideoElement>(null);
@@ -66,14 +63,14 @@ const Landingpage: FC = () => {
 
   const joinSubmitHandler: SubmitHandler<JoinRoom> = (data, e) => {
     console.log(data);
-    history.push(`/room/${data.room}`);
+    history.push(`/room/${data.room.toLowerCase()}`);
 
     e?.target.reset();
   };
 
   const makeRoomSubmitHandler: SubmitHandler<MakeRoom> = (data, e) => {
     console.log(data);
-    history.push(`/chatroom/${data.room}`);
+    history.push(`/chatroom/${data.room.toLowerCase()}`);
     e?.target.reset();
   };
 
@@ -110,6 +107,15 @@ const Landingpage: FC = () => {
                 placeholder="Enter Code To Join The Call"
                 {...joinRegister("room", {
                   required: "Enter The Room Code To Join",
+                  pattern: {
+                    value: /^[a-zA-Z0-9-]+$/,
+                    message: "only alphanumeric character and hypen allowed",
+                  },
+                  maxLength: {
+                    value: 25,
+                    message:
+                      "Room Code must be less than 25 characters long :(",
+                  },
                 })}
               />
               <button>
@@ -127,7 +133,11 @@ const Landingpage: FC = () => {
                 type="text"
                 placeholder="Join Just The Chat Room"
                 {...makeRoomRegister("room", {
-                  required: "Enter Anything As Room Code To Create A Room",
+                  required: "Enter The Room Code To Join",
+                  pattern: {
+                    value: /^[a-zA-Z0-9-]+$/,
+                    message: "only alphanumeric character and hypen allowed",
+                  },
                   maxLength: {
                     value: 25,
                     message:

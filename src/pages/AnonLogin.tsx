@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useAuthContext } from "../context/AuthProvider";
 import "../styles/anonLogin.scss";
+
 interface Form {
   email: string;
   name: string;

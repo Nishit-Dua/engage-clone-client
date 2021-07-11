@@ -8,7 +8,8 @@ type UrlParams = {
 };
 
 const ChatRoom: FC = () => {
-  const { roomId } = useParams<UrlParams>();
+  let { roomId } = useParams<UrlParams>();
+  roomId = roomId.toLowerCase();
   useDisconnect();
   return (
     <main className="chating-room">

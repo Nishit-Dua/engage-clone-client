@@ -10,16 +10,10 @@ import en from "javascript-time-ago/locale/en";
 import { ImCross } from "react-icons/im";
 import { BsCameraVideo } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
+import { MessageType } from "../utils/types";
 
 type Chat = {
   message: string;
-};
-
-type MessageType = {
-  senderName: string;
-  senderPfp: string | null;
-  message: string;
-  time: Date;
 };
 
 TimeAgo.addDefaultLocale(en);

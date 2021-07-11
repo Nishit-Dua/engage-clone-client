@@ -13,7 +13,7 @@ function App() {
         <Switch>
           <Route path="/" exact children={<Homepage />} />
           <Route path="/anonLogin" exact children={<AnonLogin />} />
-          <Route path="/land" exact children={<Landingpage />} />
+          <PrivateRoute path="/land" exact component={Landingpage} />
           <PrivateRoute path="/room/:roomId" exact component={Room} />
           <PrivateRoute path="/chatroom/:roomId" exact component={ChatRoom} />
         </Switch>
