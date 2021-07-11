@@ -6,7 +6,6 @@ export const useDisconnect = () => {
   console.log("hello from useDisconnect!");
   useEffect(() => {
     dispatchApp({ type: "DISCONNECTED" });
-    // fuck the memory leak, imma just reload the window 🤡
     if (leaveVideoChatTrigger) window.location.reload();
   }, []);
 };
