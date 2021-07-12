@@ -12,14 +12,22 @@ import { ToastContainer } from "react-toastify";
 import useSound from "use-sound";
 
 import leaveSoundEffect from "../assets/discord-leave.mp3";
+import { __prod__ } from "../utils/const";
+import { io } from "socket.io-client";
 
 type UrlParams = {
   roomId: string;
 };
 
+const socket = __prod__
+  ? io("https://engage-clone-server.herokuapp.com/")
+  : io("http://localhost:5000");
+
 const Room: FC = () => {
   const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [handsUp, setHandsUp] = useState(false);
+
   const [leaveSound] = useSound(leaveSoundEffect, {
     soundEnabled: true,
   });
@@ -30,7 +38,7 @@ const Room: FC = () => {
   return (
     <main id="room">
       <div className="video-grid">
-        <VideoChat roomId={roomId} />
+        <VideoChat roomId={roomId} socket={socket} handsUp={handsUp} />
       </div>
       <TextChat
         roomId={roomId}
@@ -71,6 +79,15 @@ const Room: FC = () => {
         >
           <BiChat />
           <p className="tool-tip">Chat</p>
+        </button>
+        <button
+          onClick={() => {
+            socket.emit("hands", { id: socket.id, state: !handsUp });
+            setHandsUp((v) => !v);
+          }}
+        >
+          {handsUp ? "✊🏼" : "✋🏼"}
+          <p className="tool-tip">Ask</p>
         </button>
       </div>
       <ToastContainer onClick={() => setIsChatOpen(true)} />

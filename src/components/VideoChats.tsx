@@ -1,10 +1,11 @@
 import Peer from "simple-peer";
 import { FC, useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { Socket } from "socket.io-client";
+import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 import { useAuthContext } from "../context/AuthProvider";
 import { useAppContext } from "../context/AppProvider";
 import { useHistory } from "react-router-dom";
-import { __prod__, iceServers, UserMediaConstraints } from "../utils/const";
+import { iceServers, UserMediaConstraints } from "../utils/const";
 import { FiVideoOff } from "react-icons/fi";
 import { PeerType, UserType } from "../utils/types";
 import { Video } from "./SingleVideo";
@@ -12,25 +13,33 @@ import useSound from "use-sound";
 
 import joinSoundEffect from "../assets/discord-join.mp3";
 import leaveSoundEffect from "../assets/discord-leave.mp3";
+import handUpSoundEffect from "../assets/hand-up.wav";
 
-const socket = __prod__
-  ? io("https://engage-clone-server.herokuapp.com/")
-  : io("http://localhost:5000");
-
-const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
+const VideoChat: FC<{
+  roomId: string;
+  socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+  handsUp: boolean;
+}> = ({ roomId, socket, handsUp }) => {
   const { currentUser } = useAuthContext();
   const { isMicOn, isVideoOn, leaveVideoChatTrigger, chatRoomTrigger } =
     useAppContext();
 
   const [joiningSound] = useSound(joinSoundEffect, { volume: 0.3 });
   const [leavingingSound] = useSound(leaveSoundEffect);
+  const [handUpSound] = useSound(handUpSoundEffect, { volume: 0.4 });
 
   const history = useHistory();
   const [peers, setPeers] = useState<PeerType[]>([]);
   const [numUsers, setNumUsers] = useState(0);
+  const [triggerHands, setTriggerHands] = useState(false);
 
   const userVideo = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream>();
+
+  useEffect(() => {
+    if (triggerHands) handUpSound();
+    setTriggerHands(false);
+  }, [triggerHands, handUpSound]);
 
   useEffect(() => {
     if (peers.length > numUsers) {
@@ -54,7 +63,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
 
   useEffect(() => {
     if (leaveVideoChatTrigger) {
-      // removes shit from state
+      // removes connected peers from connection
       peers.forEach((peer) => {
         peer.peer.destroy();
       });
@@ -72,6 +81,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
     }
     // Memory leak fix, do not call an event which would lead to
     // change this in this use effet
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leaveVideoChatTrigger, chatRoomTrigger, peers, history, roomId]);
 
   useEffect(() => {
@@ -115,6 +125,16 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
           setPeers(peers);
         });
 
+        socket.on("hands", ({ handymanId, state }) => {
+          if (state) setTriggerHands(true);
+          setPeers((prev) =>
+            prev.map((peer) => {
+              if (peer.peerId !== handymanId) return peer;
+              else return { ...peer, handState: state };
+            })
+          );
+        });
+
         socket.on("user-joined", ({ signal, callerId, name, isAnonymous }) => {
           const peer = addPeer(signal, callerId, streamRef.current!);
           localArrayOfPeers.push({
@@ -150,8 +170,6 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
       .catch(() => {
         alert("you need to give permissions for camera/mic!!!\nThen Refresh");
       });
-    // fucking piece of shit es-lint recomendation had me a memory leak
-    // which took more than 1.5 hours to fix
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -207,6 +225,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
       <div className="my-video-container">
         <video muted ref={userVideo} autoPlay playsInline id="my-video" />
         {!isVideoOn && <FiVideoOff className="no-vid" />}
+        <div className={`hand ${!handsUp ? "invisible" : ""}`}>✋🏼</div>
       </div>
       {peers.length > 0 ? (
         peers.map((peer) => {
@@ -216,6 +235,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
               peer={peer.peer}
               name={peer.name}
               isAnonymous={peer.isAnonymous}
+              handState={peer.handState}
             />
           );
         })

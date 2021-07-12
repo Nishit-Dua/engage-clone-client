@@ -26,6 +26,7 @@ const AnonLogin: FC = () => {
     firebase.firestore().collection("anons").doc().set({
       username: data.name,
       email: data.email,
+      loginTime: new Date(),
     });
     dispatch({ type: "ANON-LOGIN", payload: data });
     if (redirectTo) {

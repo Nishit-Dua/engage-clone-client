@@ -5,6 +5,7 @@ export type PeerType = {
   peer: Peer.Instance;
   name: string;
   isAnonymous: boolean;
+  handState?: boolean;
 };
 
 export type UserType = {
@@ -15,7 +16,7 @@ export type UserType = {
 
 export type MessageType = {
   senderName: string;
-  isAnonymous: boolean;
+  isAnonymous: boolean | undefined;
   senderPfp: string | null;
   message: string;
   time: Date;

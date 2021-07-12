@@ -38,7 +38,6 @@ const ChatLibrary: FC<{
   const [notificatonSound] = useSound(notificationSoundEffect);
 
   useEffect(() => {
-    // const docData: MessageType[] = [];
     const unsubscribe = firebase
       .firestore()
       .collection("rooms")
@@ -49,8 +48,7 @@ const ChatLibrary: FC<{
         const docData = snapshot.docChanges().map((doc) => {
           return doc.doc.data();
         });
-        setMessages([...docData] as MessageType[]);
-        docData.length = 0;
+        setMessages((prev) => [...prev, ...docData] as MessageType[]);
       });
     return unsubscribe;
   }, [roomId]);
@@ -61,13 +59,15 @@ const ChatLibrary: FC<{
     });
     if (
       messages.length > 0 &&
-      messages[messages.length - 1].senderName !== currentUser?.displayName
+      messages[messages.length - 1].senderName !== currentUser?.displayName &&
+      !isChatOpen
     ) {
       notificatonSound();
       toast(messages[messages.length - 1].message, {
         autoClose: 2000,
         hideProgressBar: true,
         pauseOnHover: false,
+        style: { color: "black" },
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +85,7 @@ const ChatLibrary: FC<{
       senderPfp: currentUser?.photoURL || null,
       message: data.message,
       time: new Date(),
-      isAnonymous: currentUser?.isAnonymous || true,
+      isAnonymous: currentUser?.isAnonymous,
     };
 
     firebase
@@ -96,10 +96,14 @@ const ChatLibrary: FC<{
       .doc()
       .set(docData)
       .then(() => {
-        setMessages((old) => [...old]);
+        // previously i was refreshing the data on every write since the snapshot was async
+        // but i didn't knew that and the callback didn't give me the methords to deal with
+        // the stream, but in the end when i noticed the asynchronous activity when the state
+        // didn't get updated i fixed it :D
+        // setMessages((old) => [...old]);
       })
-      .catch(() => {
-        console.log("Some Bt?");
+      .catch((err) => {
+        console.log("Some problem?", err);
       });
 
     return;

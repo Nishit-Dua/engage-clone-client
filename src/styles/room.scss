@@ -8,6 +8,7 @@
   overflow-x: hidden;
 
   .controls {
+    user-select: none;
     position: absolute;
     z-index: 5;
     left: 50%;
@@ -43,7 +44,7 @@
     }
 
     .redirect {
-      color: rgb(62, 148, 44);
+      color: rgb(0, 102, 94);
     }
 
     button {
@@ -108,6 +109,11 @@
     width: calc(var(--video-size) * 16 / 9);
     position: relative;
 
+    &.speaking {
+      border-radius: 2px;
+      border: 2px solid rgb(63, 229, 255);
+    }
+
     video {
       height: 100%;
       width: 100%;
@@ -122,6 +128,21 @@
       bottom: 10px;
       left: 10px;
     }
+    .hand {
+      z-index: 10;
+      transform: translateY(0%);
+      color: rgb(0, 0, 0);
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+      transition: all 0.1s ease-in-out;
+      font-size: 1.5rem;
+
+      &.invisible {
+        color: transparent;
+        transform: translateY(-100%);
+      }
+    }
   }
 }
 .my-video-container {
@@ -135,6 +156,21 @@
   border-radius: 5px;
   left: 3rem;
   bottom: 3rem;
+
+  .hand {
+    z-index: 10;
+    transform: translateY(0%);
+    color: rgb(0, 0, 0);
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    transition: all 0.1s ease-in-out;
+
+    &.invisible {
+      color: transparent;
+      transform: translateY(-100%);
+    }
+  }
 
   @media only screen and (max-width: 900px) {
     --my-vid-size: 4rem;

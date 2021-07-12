@@ -8,9 +8,6 @@ import { useHistory } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAppContext } from "../context/AppProvider";
 
-// NOTE TO SELF I decided to be done with registering a room and repurposed the variables for
-// ChatRoom but DIDN'T change the variables because reason :P
-
 const Landingpage: FC = () => {
   const vidRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream>();
@@ -45,7 +42,7 @@ const Landingpage: FC = () => {
     room: string;
   }
 
-  interface MakeRoom {
+  interface JoinChatRoom {
     room: string;
   }
 
@@ -56,10 +53,10 @@ const Landingpage: FC = () => {
   } = useForm<JoinRoom>();
 
   const {
-    register: makeRoomRegister,
+    register: joinChatRoomRegister,
     handleSubmit: makeRoomHandleSubmit,
-    formState: { errors: registerErrors },
-  } = useForm<MakeRoom>();
+    formState: { errors: chatRoomErrors },
+  } = useForm<JoinChatRoom>();
 
   const joinSubmitHandler: SubmitHandler<JoinRoom> = (data, e) => {
     history.push(`/room/${data.room.toLowerCase()}`);
@@ -67,7 +64,7 @@ const Landingpage: FC = () => {
     e?.target.reset();
   };
 
-  const makeRoomSubmitHandler: SubmitHandler<MakeRoom> = (data, e) => {
+  const joinChatRoomSubmitHandler: SubmitHandler<JoinChatRoom> = (data, e) => {
     history.push(`/chatroom/${data.room.toLowerCase()}`);
     e?.target.reset();
   };
@@ -124,13 +121,13 @@ const Landingpage: FC = () => {
               <p className="error">{joinErrors.room.message}</p>
             )}
             <form
-              onSubmit={makeRoomHandleSubmit(makeRoomSubmitHandler)}
+              onSubmit={makeRoomHandleSubmit(joinChatRoomSubmitHandler)}
               autoComplete="off"
             >
               <input
                 type="text"
                 placeholder="Join Just The Chat Room"
-                {...makeRoomRegister("room", {
+                {...joinChatRoomRegister("room", {
                   required: "Enter The Room Code To Join",
                   pattern: {
                     value: /^[a-zA-Z0-9-]+$/,
@@ -147,8 +144,8 @@ const Landingpage: FC = () => {
                 <AiOutlineEnter /> Join Chat
               </button>
             </form>
-            {registerErrors.room && (
-              <p className="error">{registerErrors.room.message}</p>
+            {chatRoomErrors.room && (
+              <p className="error">{chatRoomErrors.room.message}</p>
             )}
           </div>
         </div>
