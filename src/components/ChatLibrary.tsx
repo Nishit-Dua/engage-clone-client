@@ -38,7 +38,7 @@ const ChatLibrary: FC<{
   const [notificatonSound] = useSound(notificationSoundEffect);
 
   useEffect(() => {
-    const docData: MessageType[] = [];
+    // const docData: MessageType[] = [];
     const unsubscribe = firebase
       .firestore()
       .collection("rooms")
@@ -46,10 +46,11 @@ const ChatLibrary: FC<{
       .collection(roomId)
       .orderBy("time", "asc")
       .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((doc) => {
-          docData.push(doc.doc.data() as MessageType);
+        const docData = snapshot.docChanges().map((doc) => {
+          return doc.doc.data();
         });
-        setMessages(docData);
+        setMessages([...docData] as MessageType[]);
+        docData.length = 0;
       });
     return unsubscribe;
   }, [roomId]);

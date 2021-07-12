@@ -1,5 +1,7 @@
 import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import firebase from "firebase/app";
+import "firebase/firestore";
 import { useHistory } from "react-router-dom";
 import { useAuthContext } from "../context/AuthProvider";
 import "../styles/anonLogin.scss";
@@ -22,6 +24,10 @@ const AnonLogin: FC = () => {
 
   const submitHandler: SubmitHandler<Form> = (data, e) => {
     console.log(data);
+    firebase.firestore().collection("anons").doc().set({
+      username: data.name,
+      email: data.email,
+    });
     dispatch({ type: "ANON-LOGIN", payload: data });
     if (redirectTo) {
       history.push(redirectTo);
@@ -38,6 +44,10 @@ const AnonLogin: FC = () => {
           placeholder="Name"
           {...register("name", {
             required: "Enter Your Name!",
+            maxLength: {
+              value: 15,
+              message: "Enter a shorter name or login!",
+            },
           })}
         />
         {errors.name && <p className="error">{errors.name.message}</p>}

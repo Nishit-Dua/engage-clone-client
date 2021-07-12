@@ -39,6 +39,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
       leavingingSound();
     }
     setNumUsers(peers.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [peers.length]);
 
   useEffect(() => {
