@@ -23,7 +23,6 @@ const AnonLogin: FC = () => {
   });
 
   const submitHandler: SubmitHandler<Form> = (data, e) => {
-    console.log(data);
     firebase.firestore().collection("anons").doc().set({
       username: data.name,
       email: data.email,

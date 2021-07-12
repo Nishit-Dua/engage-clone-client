@@ -34,7 +34,6 @@ const Homepage: FC = () => {
       setError(res);
     } else if (res) {
       dispatch({ type: "SET-USER", payload: res });
-      console.log(res);
       if (redirectTo) {
         history.push(redirectTo);
       } else {

@@ -17,8 +17,6 @@ export const Video = ({
     peer.on("stream", (stream) => {
       streamRef.current = stream;
       videoRef.current!.srcObject = streamRef.current;
-
-      console.log(streamRef.current.getAudioTracks()[0]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

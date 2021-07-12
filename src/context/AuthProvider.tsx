@@ -88,7 +88,7 @@ const AuthProvider: React.FC = ({ children }) => {
       await firebase.auth().signOut();
       dispatch({ type: "SIGN-OUT" });
     } catch (err) {
-      alert("error logining out, check console");
+      alert("error logining out, contact nishit at\nnishitdua175@gmail.com !!");
       console.log(err);
     }
   };

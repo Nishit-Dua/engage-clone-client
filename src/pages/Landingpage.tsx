@@ -62,14 +62,12 @@ const Landingpage: FC = () => {
   } = useForm<MakeRoom>();
 
   const joinSubmitHandler: SubmitHandler<JoinRoom> = (data, e) => {
-    console.log(data);
     history.push(`/room/${data.room.toLowerCase()}`);
 
     e?.target.reset();
   };
 
   const makeRoomSubmitHandler: SubmitHandler<MakeRoom> = (data, e) => {
-    console.log(data);
     history.push(`/chatroom/${data.room.toLowerCase()}`);
     e?.target.reset();
   };
