@@ -11,6 +11,7 @@ import { Video } from "./SingleVideo";
 import useSound from "use-sound";
 
 import joinSoundEffect from "../assets/discord-join.mp3";
+import leaveSoundEffect from "../assets/discord-leave.mp3";
 
 const socket = __prod__
   ? io("https://engage-clone-server.herokuapp.com/")
@@ -21,12 +22,24 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
   const { isMicOn, isVideoOn, leaveVideoChatTrigger, chatRoomTrigger } =
     useAppContext();
 
-  const [joinSound] = useSound(joinSoundEffect);
+  const [joiningSound] = useSound(joinSoundEffect, { volume: 0.3 });
+  const [leavingingSound] = useSound(leaveSoundEffect);
 
   const history = useHistory();
   const [peers, setPeers] = useState<PeerType[]>([]);
+  const [numUsers, setNumUsers] = useState(0);
+
   const userVideo = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream>();
+
+  useEffect(() => {
+    if (peers.length > numUsers) {
+      joiningSound();
+    } else if (numUsers > peers.length) {
+      leavingingSound();
+    }
+    setNumUsers(peers.length);
+  }, [peers.length]);
 
   useEffect(() => {
     if (streamRef.current)

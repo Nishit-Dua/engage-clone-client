@@ -114,6 +114,7 @@
       object-fit: cover;
     }
     p {
+      user-select: none;
       position: absolute;
       text-transform: capitalize;
       color: #fff;

@@ -5,8 +5,6 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { useAuthContext } from "../context/AuthProvider";
 import "../styles/chat.scss";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
 import { ImCross } from "react-icons/im";
 import { BsCameraVideo } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
@@ -14,15 +12,14 @@ import { MessageType } from "../utils/types";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useSound from "use-sound";
+import { formatDistance } from "date-fns";
 
-import joinSoundEffect from "../assets/discord-join.mp3";
+import notificationSoundEffect from "../assets/discord-notification.mp3";
+import React from "react";
 
 type Chat = {
   message: string;
 };
-
-TimeAgo.addDefaultLocale(en);
-// const timeAgo = new TimeAgo("en-IN");
 
 const ChatLibrary: FC<{
   roomId: string;
@@ -38,9 +35,7 @@ const ChatLibrary: FC<{
   const [messages, setMessages] = useState<MessageType[]>([]);
   const { currentUser } = useAuthContext();
 
-  const [notificatonSound] = useSound(joinSoundEffect);
-
-  // let notifyNewMessage: VoidFunction;
+  const [notificatonSound] = useSound(notificationSoundEffect);
 
   useEffect(() => {
     const docData: MessageType[] = [];
@@ -74,6 +69,7 @@ const ChatLibrary: FC<{
         pauseOnHover: false,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   useEffect(() => {
@@ -158,33 +154,31 @@ type ChatMessageProps = {
   isAnonymous: boolean;
 };
 
-const ChatMessage: FC<ChatMessageProps> = ({
-  message,
-  senderName,
-  senderPfp,
-  time,
-  isAnonymous,
-}) => {
-  return (
-    <div className="message">
-      <img
-        src={
-          senderPfp ||
-          "https://pbs.twimg.com/media/EfwfM9mX0AcM7Ea?format=jpg&name=small"
-        }
-        alt={senderName}
-      />
-      <div className="profile">
-        <div className="compose">
-          <p>
-            {senderName} {isAnonymous && "(Guest)"}
-          </p>
-          <p className="date">{time.seconds}</p>
+const ChatMessage: FC<ChatMessageProps> = React.memo(
+  ({ message, senderName, senderPfp, time, isAnonymous }) => {
+    return (
+      <div className="message">
+        <img
+          src={
+            senderPfp ||
+            "https://pbs.twimg.com/media/EfwfM9mX0AcM7Ea?format=jpg&name=small"
+          }
+          alt={senderName}
+        />
+        <div className="profile">
+          <div className="compose">
+            <p>
+              {senderName} {isAnonymous && "(Guest)"}
+            </p>
+            <p className="date">
+              {formatDistance(time.toMillis(), new Date())}
+            </p>
+          </div>
+          <p>{message}</p>
         </div>
-        <p>{message}</p>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default ChatLibrary;
