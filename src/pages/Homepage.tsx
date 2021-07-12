@@ -21,7 +21,7 @@ const Homepage: FC = () => {
   useDisconnect();
 
   useEffect(() => {
-    if (currentUser) history.push("/land");
+    if (currentUser) history.push("/");
   }, [currentUser, history]);
 
   const anonLoginHandler = () => {
@@ -38,7 +38,7 @@ const Homepage: FC = () => {
       if (redirectTo) {
         history.push(redirectTo);
       } else {
-        history.push("/land");
+        history.push("/");
       }
     }
   };

@@ -31,6 +31,10 @@
         padding: 0.4rem 1rem !important;
         font-size: 0.7rem !important;
         position: relative;
+
+        .tool-tip {
+          font-size: 0.6rem !important;
+        }
       }
     }
 
@@ -39,7 +43,7 @@
     }
 
     .redirect {
-      color: rgb(0, 43, 122);
+      color: rgb(62, 148, 44);
     }
 
     button {
@@ -50,6 +54,21 @@
       padding: 0.8rem 1.5rem;
       font-size: 1rem;
       position: relative;
+
+      &:hover > .tool-tip {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+
+      .tool-tip {
+        bottom: 0%;
+        left: 50%;
+        font-size: 1rem;
+        transform: translate(-50%, -100%);
+        position: absolute;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+      }
 
       &:hover {
         background-color: rgb(223, 167, 94);

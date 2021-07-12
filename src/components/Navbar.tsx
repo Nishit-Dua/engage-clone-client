@@ -14,7 +14,7 @@ const Navbar: FC = () => {
         <button
           onClick={() => {
             signOut().then(() => {
-              history.push("/");
+              history.push("/login");
             });
           }}
         >

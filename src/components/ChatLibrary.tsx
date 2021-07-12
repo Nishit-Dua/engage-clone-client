@@ -11,6 +11,11 @@ import { ImCross } from "react-icons/im";
 import { BsCameraVideo } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
 import { MessageType } from "../utils/types";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useSound from "use-sound";
+
+import joinSoundEffect from "../assets/discord-join.mp3";
 
 type Chat = {
   message: string;
@@ -33,6 +38,10 @@ const ChatLibrary: FC<{
   const [messages, setMessages] = useState<MessageType[]>([]);
   const { currentUser } = useAuthContext();
 
+  const [notificatonSound] = useSound(joinSoundEffect);
+
+  // let notifyNewMessage: VoidFunction;
+
   useEffect(() => {
     const docData: MessageType[] = [];
     const unsubscribe = firebase
@@ -54,15 +63,32 @@ const ChatLibrary: FC<{
     scrollToNewMessageRef.current?.scrollIntoView({
       behavior: "smooth",
     });
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].senderName !== currentUser?.displayName
+    ) {
+      notificatonSound();
+      toast(messages[messages.length - 1].message, {
+        autoClose: 2000,
+        hideProgressBar: true,
+        pauseOnHover: false,
+      });
+    }
   }, [messages]);
+
+  useEffect(() => {
+    if (isChatOpen) {
+    }
+  }, [isChatOpen]);
 
   const submitHandler: SubmitHandler<Chat> = async (data) => {
     reset({ message: "" });
-    const docData = {
+    const docData: MessageType = {
       senderName: currentUser?.displayName,
       senderPfp: currentUser?.photoURL || null,
       message: data.message,
       time: new Date(),
+      isAnonymous: currentUser?.isAnonymous || true,
     };
 
     firebase
@@ -129,6 +155,7 @@ type ChatMessageProps = {
   senderPfp: string | null;
   message: string;
   time: any;
+  isAnonymous: boolean;
 };
 
 const ChatMessage: FC<ChatMessageProps> = ({
@@ -136,6 +163,7 @@ const ChatMessage: FC<ChatMessageProps> = ({
   senderName,
   senderPfp,
   time,
+  isAnonymous,
 }) => {
   return (
     <div className="message">
@@ -148,7 +176,9 @@ const ChatMessage: FC<ChatMessageProps> = ({
       />
       <div className="profile">
         <div className="compose">
-          <p>{senderName}</p>
+          <p>
+            {senderName} {isAnonymous && "(Guest)"}
+          </p>
           <p className="date">{time.seconds}</p>
         </div>
         <p>{message}</p>

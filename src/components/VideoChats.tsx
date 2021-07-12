@@ -8,6 +8,9 @@ import { __prod__, iceServers, UserMediaConstraints } from "../utils/const";
 import { FiVideoOff } from "react-icons/fi";
 import { PeerType, UserType } from "../utils/types";
 import { Video } from "./SingleVideo";
+import useSound from "use-sound";
+
+import joinSoundEffect from "../assets/discord-join.mp3";
 
 const socket = __prod__
   ? io("https://engage-clone-server.herokuapp.com/")
@@ -17,6 +20,8 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
   const { currentUser } = useAuthContext();
   const { isMicOn, isVideoOn, leaveVideoChatTrigger, chatRoomTrigger } =
     useAppContext();
+
+  const [joinSound] = useSound(joinSoundEffect);
 
   const history = useHistory();
   const [peers, setPeers] = useState<PeerType[]>([]);
@@ -48,7 +53,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
       if (chatRoomTrigger) {
         history.push(`/chatroom/${roomId}`);
       } else {
-        history.push("/");
+        history.push("/login");
       }
     }
     // Memory leak fix, do not call an event which would lead to
@@ -68,8 +73,6 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
         socket.emit("join-room", {
           roomId,
           name: currentUser?.displayName,
-          photoURL: currentUser?.photoURL,
-          email: currentUser?.email,
           isAnonymous: currentUser?.isAnonymous,
         });
         socket.on("all-users", (users: UserType[]) => {
@@ -80,49 +83,38 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
               socket.id,
               streamRef.current!,
               currentUser?.displayName,
-              currentUser?.photoURL,
-              currentUser?.isAnonymous!,
-              currentUser?.email
+              currentUser?.isAnonymous!
             );
             localArrayOfPeers.push({
               peerId: user.id,
               peer,
               name: user.name,
-              email: user.email,
               isAnonymous: user.isAnonymous,
-              photoURL: user.photoURL,
             });
             peers.push({
               peerId: user.id,
               peer,
               name: user.name,
-              email: user.email,
               isAnonymous: user.isAnonymous,
-              photoURL: user.photoURL,
             });
           });
           setPeers(peers);
         });
 
-        socket.on(
-          "user-joined",
-          ({ signal, callerId, name, photoURL, email, isAnonymous }) => {
-            const peer = addPeer(signal, callerId, streamRef.current!);
-            localArrayOfPeers.push({
-              peerId: callerId,
-              peer,
-              name,
-              photoURL,
-              email,
-              isAnonymous,
-            });
+        socket.on("user-joined", ({ signal, callerId, name, isAnonymous }) => {
+          const peer = addPeer(signal, callerId, streamRef.current!);
+          localArrayOfPeers.push({
+            peerId: callerId,
+            peer,
+            name,
+            isAnonymous,
+          });
 
-            setPeers((users) => [
-              ...users,
-              { peerId: callerId, peer, name, photoURL, email, isAnonymous },
-            ]);
-          }
-        );
+          setPeers((users) => [
+            ...users,
+            { peerId: callerId, peer, name, isAnonymous },
+          ]);
+        });
 
         socket.on("handshake", ({ signal, id }) => {
           const item = localArrayOfPeers.find((p) => p.peerId === id);
@@ -154,9 +146,7 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
     callerId: string,
     stream: MediaStream,
     myName: string,
-    photoURL: string | null | undefined,
-    isAnonymous: boolean,
-    email: string
+    isAnonymous: boolean
   ) => {
     const peer = new Peer({
       initiator: true,
@@ -171,8 +161,6 @@ const VideoChat: FC<{ roomId: string }> = ({ roomId }) => {
         callerId,
         signal,
         myName,
-        photoURL,
-        email,
         isAnonymous,
       });
     });

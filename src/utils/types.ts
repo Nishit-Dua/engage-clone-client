@@ -4,21 +4,18 @@ export type PeerType = {
   peerId: string;
   peer: Peer.Instance;
   name: string;
-  photoURL: string | null | undefined;
   isAnonymous: boolean;
-  email: string;
 };
 
 export type UserType = {
   id: string;
   name: string;
-  photoURL: string | null | undefined;
   isAnonymous: boolean;
-  email: string;
 };
 
 export type MessageType = {
   senderName: string;
+  isAnonymous: boolean;
   senderPfp: string | null;
   message: string;
   time: Date;

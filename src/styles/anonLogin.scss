@@ -38,7 +38,13 @@
     }
 
     .error {
-      color: rgb(148, 5, 5);
+      color: rgb(223, 0, 0);
+
+      &.login-please {
+        text-align: center;
+        margin-top: 1rem;
+        color: rgb(207, 100, 0);
+      }
     }
 
     button {

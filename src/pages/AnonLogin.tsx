@@ -26,7 +26,7 @@ const AnonLogin: FC = () => {
     if (redirectTo) {
       history.push(redirectTo);
     } else {
-      history.push("/land");
+      history.push("/");
     }
   };
 
@@ -54,6 +54,11 @@ const AnonLogin: FC = () => {
         />
         {errors.email && <p className="error">{errors.email.message}</p>}
         <button>Join In!</button>
+        <p className="error login-please">
+          You're Joining as a Guest, your name would have a guest tag associated
+          to it and others will know that you aren't loged in, you can login
+          using google/github to change that
+        </p>
       </form>
     </main>
   );

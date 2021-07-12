@@ -20,7 +20,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       children={(props) =>
-        !!currentUser ? <Component {...props} /> : <Redirect to={"/"} />
+        !!currentUser ? <Component {...props} /> : <Redirect to={"/login"} />
       }
     />
   );
