@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAppContext } from "../context/AppProvider";
+import { RiChatVoiceLine } from "react-icons/ri";
 
 const Landingpage: FC = () => {
   const vidRef = useRef<HTMLVideoElement>(null);
@@ -35,8 +36,6 @@ const Landingpage: FC = () => {
     };
     getMediaDevices();
   }, []);
-
-  // Form Logic
 
   interface JoinRoom {
     room: string;
@@ -141,7 +140,7 @@ const Landingpage: FC = () => {
                 })}
               />
               <button>
-                <AiOutlineEnter /> Join Chat
+                <RiChatVoiceLine /> Join Chat
               </button>
             </form>
             {chatRoomErrors.room && (

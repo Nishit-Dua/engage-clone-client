@@ -90,7 +90,7 @@ aside {
     }
   }
 
-  // background-color: aquamarine;
+  -color: aquamarine;
 
   .chats {
     flex: 1;
@@ -202,7 +202,7 @@ aside {
       @media only screen and (max-width: 900px) {
         font-size: 0.6rem;
       }
-      // background-color: cadetblue;
+      -color: cadetblue;
       .date {
         color: rgb(66, 66, 66);
         font-size: 0.5rem;

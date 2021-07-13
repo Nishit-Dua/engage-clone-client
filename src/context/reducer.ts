@@ -5,7 +5,6 @@ type DispatchType = {
   payload?: any;
 };
 
-// Add Dispatch "type" Actions Here To add type support (and use in TS)
 type Actions =
   | "MIC-TOGGLE"
   | "VIDEO-TOGGLE"

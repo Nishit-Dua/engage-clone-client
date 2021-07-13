@@ -4,6 +4,7 @@ import ChatRoom from "./pages/ChatRoom";
 import Homepage from "./pages/Homepage";
 import Landingpage from "./pages/Landingpage";
 import Room from "./pages/Room";
+import WrongUrl from "./pages/WrongUrl";
 import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <PrivateRoute path="/" exact component={Landingpage} />
           <PrivateRoute path="/room/:roomId" exact component={Room} />
           <PrivateRoute path="/chatroom/:roomId" exact component={ChatRoom} />
+          <Route path="*" component={WrongUrl} />
         </Switch>
       </Router>
     </div>

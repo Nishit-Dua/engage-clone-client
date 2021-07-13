@@ -6,7 +6,7 @@ nav {
   background-color: transparent;
 
   .logo {
-    // background-color: antiquewhite;
+    -color: antiquewhite;
     font-size: 2.5rem;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.13);
     @media screen and (max-width: 900px) {
@@ -43,22 +43,22 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  // background-color: chartreuse;
+  -color: chartreuse;
   background: transparent;
 
   @media only screen and (max-width: 900px) {
     flex-direction: column;
+    height: auto;
     .video-container {
-      flex: 1;
+      flex: 1 !important;
       margin: 5rem 0;
       width: 400px;
-      height: 300px;
       video {
         object-fit: cover;
       }
     }
     .room-container {
-      flex: 1;
+      flex: 1 !important;
     }
   }
 
@@ -68,7 +68,7 @@ nav {
     display: flex;
     justify-content: center;
 
-    // background-color: cornflowerblue;
+    -color: cornflowerblue;
     video {
       // object-fit: cover;
       width: 500px;
@@ -130,7 +130,7 @@ nav {
     --padding: 1.2rem 3rem;
     --border-rad: 4px;
     flex: 5;
-    // background-color: thistle;
+    -color: thistle;
     display: flex;
     justify-content: center;
     margin-right: 2rem;
@@ -149,7 +149,7 @@ nav {
       width: 80%;
       display: flex;
       flex-direction: column;
-      // background-color: lightpink;
+      -color: lightpink;
     }
 
     .error {
@@ -167,7 +167,7 @@ nav {
       box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
         rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
-      // background-color: crimson;
+      -color: crimson;
       &:not(:last-child) {
         margin-bottom: 2rem;
       }

@@ -26,7 +26,7 @@ const VideoChat: FC<{
 
   const [joiningSound] = useSound(joinSoundEffect, { volume: 0.3 });
   const [leavingingSound] = useSound(leaveSoundEffect);
-  const [handUpSound] = useSound(handUpSoundEffect, { volume: 0.4 });
+  const [handUpSound] = useSound(handUpSoundEffect, { volume: 0.3 });
 
   const history = useHistory();
   const [peers, setPeers] = useState<PeerType[]>([]);

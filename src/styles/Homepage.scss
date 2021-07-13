@@ -8,7 +8,7 @@
   // height: 100%;
   // display: flex;
   // justify-content: center;
-  // background-color: aquamarine;
+  -color: aquamarine;
 
   .clamp-container {
     height: 100%;
@@ -17,7 +17,7 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
-    // background-color: cadetblue;
+    -color: cadetblue;
   }
 
   button {
@@ -34,7 +34,7 @@
     align-items: center;
     justify-content: center;
 
-    // background-color: bisque;
+    -color: bisque;
     svg {
       font-size: 1.2rem;
       transform: translateY(5%);

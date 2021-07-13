@@ -23,6 +23,8 @@ const socket = __prod__
   ? io("https://engage-clone-server.herokuapp.com/")
   : io("http://localhost:5000");
 
+// const socket = io("https://engage-clone-server.herokuapp.com/");
+
 const Room: FC = () => {
   const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
   const [isChatOpen, setIsChatOpen] = useState(false);

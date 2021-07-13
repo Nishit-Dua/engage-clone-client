@@ -159,31 +159,33 @@ type ChatMessageProps = {
   isAnonymous: boolean;
 };
 
-const ChatMessage: FC<ChatMessageProps> = React.memo(
-  ({ message, senderName, senderPfp, time, isAnonymous }) => {
-    return (
-      <div className="message">
-        <img
-          src={
-            senderPfp ||
-            "https://pbs.twimg.com/media/EfwfM9mX0AcM7Ea?format=jpg&name=small"
-          }
-          alt={senderName}
-        />
-        <div className="profile">
-          <div className="compose">
-            <p>
-              {senderName} {isAnonymous && "(Guest)"}
-            </p>
-            <p className="date">
-              {formatDistance(time.toMillis(), new Date())}
-            </p>
-          </div>
-          <p>{message}</p>
+const ChatMessage: FC<ChatMessageProps> = ({
+  message,
+  senderName,
+  senderPfp,
+  time,
+  isAnonymous,
+}) => {
+  return (
+    <div className="message">
+      <img
+        src={
+          senderPfp ||
+          "https://pbs.twimg.com/media/EfwfM9mX0AcM7Ea?format=jpg&name=small"
+        }
+        alt={senderName}
+      />
+      <div className="profile">
+        <div className="compose">
+          <p>
+            {senderName} {isAnonymous && "(Guest)"}
+          </p>
+          <p className="date">{formatDistance(time.toMillis(), new Date())}</p>
         </div>
+        <p>{message}</p>
       </div>
-    );
-  }
-);
+    </div>
+  );
+};
 
 export default ChatLibrary;
