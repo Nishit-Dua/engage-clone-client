@@ -5,13 +5,14 @@ import { useEffect } from "react";
 // I cant figure out the types for ...rest so imma just use js for this!
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { pathname } = useLocation();
+  console.log(pathname);
   const { currentUser, dispatch } = useAuthContext();
   useEffect(() => {
     dispatch({
       type: "REDIRECT-AFTER-LOGIN",
       payload: { redirectTo: pathname },
     });
-    if (!currentUser) {
+    if (!currentUser && pathname !== "/") {
       dispatch({ type: "TRY-JOIN-WITHOUT-LOGIN" });
     }
   }, [currentUser, dispatch, pathname]);
