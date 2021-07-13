@@ -64,23 +64,25 @@ const VideoChat: FC<{
           );
         if (userVideo.current) userVideo.current.srcObject = stream;
       });
-    } else {
+    } else if (isVideoOn) {
       peers.forEach(async (peer) => {
-        const stream = await navigator.mediaDevices.getUserMedia(
-          UserMediaConstraints
-        );
-        const vid = stream.getVideoTracks()[0];
-        if (streamRef.current)
+        // const stream = await navigator.mediaDevices.getUserMedia(
+        //   UserMediaConstraints
+        // );
+        // const vid = stream.getVideoTracks()[0];
+        if (streamRef.current) {
           peer.peer.replaceTrack(
             streamRef.current.getVideoTracks()[0],
-            vid,
+            streamRef.current.getVideoTracks()[0],
             streamRef.current
           );
-        if (userVideo.current) userVideo.current.srcObject = stream;
+          if (userVideo.current)
+            userVideo.current.srcObject = streamRef.current;
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSharingScreen, peers.length]);
+  }, [isSharingScreen, peers.length, isVideoOn]);
 
   useEffect(() => {
     if (triggerHands) handUpSound();
