@@ -59,20 +59,20 @@ const Room: FC = () => {
         <button
           onClick={() => {
             leaveSound();
-            dispatchApp({ type: "DECONNECT-FROM-VIDEO" });
-          }}
-        >
-          <MdCallEnd className="off" />
-          <p className="tool-tip">Bye</p>
-        </button>
-        <button
-          onClick={() => {
-            leaveSound();
             dispatchApp({ type: "GO-TO-CHAT-ROOM" });
           }}
         >
           <RiChatVoiceLine className="redirect" />
           <p className="tool-tip">Chat Room</p>
+        </button>
+        <button
+          onClick={() => {
+            leaveSound();
+            dispatchApp({ type: "DECONNECT-FROM-VIDEO" });
+          }}
+        >
+          <MdCallEnd className="off" />
+          <p className="tool-tip">Bye</p>
         </button>
         <button
           onClick={() => {
@@ -96,7 +96,7 @@ const Room: FC = () => {
             dispatchApp({ type: "SHARE-SCREEN" });
           }}
         >
-          {isSharingScreen ? <MdScreenShare /> : <MdStopScreenShare />}
+          {isSharingScreen ? <MdStopScreenShare /> : <MdScreenShare />}
           <p className="tool-tip">Screen</p>
         </button>
       </div>

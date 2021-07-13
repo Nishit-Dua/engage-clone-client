@@ -16,7 +16,7 @@
     transform: translate(-50%);
 
     width: auto;
-    padding: 1rem 4rem;
+    padding: 1rem 3rem;
     background-color: rgb(46, 46, 46);
     display: flex;
     flex-wrap: wrap;
@@ -106,7 +106,7 @@
   }
 
   .video-container {
-    --video-size: 240px;
+    --video-size: 255px;
     height: var(--video-size);
     width: calc(var(--video-size) * 16 / 9);
     position: relative;
