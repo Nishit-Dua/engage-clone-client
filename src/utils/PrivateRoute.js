@@ -5,7 +5,6 @@ import { useEffect } from "react";
 // I cant figure out the types for ...rest so imma just use js for this!
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { pathname } = useLocation();
-  console.log(pathname);
   const { currentUser, dispatch } = useAuthContext();
   useEffect(() => {
     dispatch({

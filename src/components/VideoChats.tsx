@@ -14,6 +14,7 @@ import useSound from "use-sound";
 import joinSoundEffect from "../assets/discord-join.mp3";
 import leaveSoundEffect from "../assets/discord-leave.mp3";
 import handUpSoundEffect from "../assets/hand-up.wav";
+import Loader from "./Loader";
 
 const VideoChat: FC<{
   roomId: string;
@@ -21,8 +22,13 @@ const VideoChat: FC<{
   handsUp: boolean;
 }> = ({ roomId, socket, handsUp }) => {
   const { currentUser } = useAuthContext();
-  const { isMicOn, isVideoOn, leaveVideoChatTrigger, chatRoomTrigger } =
-    useAppContext();
+  const {
+    isMicOn,
+    isVideoOn,
+    leaveVideoChatTrigger,
+    chatRoomTrigger,
+    isSharingScreen,
+  } = useAppContext();
 
   const [joiningSound] = useSound(joinSoundEffect, { volume: 0.3 });
   const [leavingingSound] = useSound(leaveSoundEffect);
@@ -32,9 +38,49 @@ const VideoChat: FC<{
   const [peers, setPeers] = useState<PeerType[]>([]);
   const [numUsers, setNumUsers] = useState(0);
   const [triggerHands, setTriggerHands] = useState(false);
+  const [totalConnected, setTotalConnected] = useState(0);
+
+  const [allConnected, setAllConnected] = useState(false);
 
   const userVideo = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream>();
+
+  useEffect(() => {
+    if (totalConnected === numUsers && numUsers !== 0) setAllConnected(true);
+    if (numUsers === 0) setAllConnected(false);
+  }, [numUsers, totalConnected]);
+
+  useEffect(() => {
+    if (isSharingScreen) {
+      peers.forEach(async (peer) => {
+        const mediaDevices = navigator.mediaDevices as any;
+        const stream = await mediaDevices.getDisplayMedia();
+        const vid = stream.getVideoTracks()[0];
+        if (streamRef.current)
+          peer.peer.replaceTrack(
+            streamRef.current.getVideoTracks()[0],
+            vid,
+            streamRef.current
+          );
+        if (userVideo.current) userVideo.current.srcObject = stream;
+      });
+    } else {
+      peers.forEach(async (peer) => {
+        const stream = await navigator.mediaDevices.getUserMedia(
+          UserMediaConstraints
+        );
+        const vid = stream.getVideoTracks()[0];
+        if (streamRef.current)
+          peer.peer.replaceTrack(
+            streamRef.current.getVideoTracks()[0],
+            vid,
+            streamRef.current
+          );
+        if (userVideo.current) userVideo.current.srcObject = stream;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSharingScreen, peers.length]);
 
   useEffect(() => {
     if (triggerHands) handUpSound();
@@ -49,7 +95,7 @@ const VideoChat: FC<{
     }
     setNumUsers(peers.length);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [peers.length]);
+  }, [peers]);
 
   useEffect(() => {
     if (streamRef.current)
@@ -100,7 +146,7 @@ const VideoChat: FC<{
           isAnonymous: currentUser?.isAnonymous,
         });
         socket.on("all-users", (users: UserType[]) => {
-          const peers: PeerType[] = [];
+          const gettingPeers: PeerType[] = [];
           users.forEach((user) => {
             const peer = createPeer(
               user.id,
@@ -115,14 +161,14 @@ const VideoChat: FC<{
               name: user.name,
               isAnonymous: user.isAnonymous,
             });
-            peers.push({
+            gettingPeers.push({
               peerId: user.id,
               peer,
               name: user.name,
               isAnonymous: user.isAnonymous,
             });
           });
-          setPeers(peers);
+          setPeers(gettingPeers);
         });
 
         socket.on("hands", ({ handymanId, state }) => {
@@ -187,6 +233,10 @@ const VideoChat: FC<{
       config: { iceServers },
     });
 
+    peer.addListener("connect", () => {
+      setTotalConnected((prev) => prev + 1);
+    });
+
     peer.on("signal", (signal) => {
       socket.emit("signalling", {
         userToConnect,
@@ -210,6 +260,10 @@ const VideoChat: FC<{
       trickle: false,
       stream,
       config: { iceServers },
+    });
+
+    peer.addListener("connect", () => {
+      setTotalConnected((prev) => prev + 1);
     });
 
     peer.on("signal", (signal) => {
@@ -239,6 +293,8 @@ const VideoChat: FC<{
             />
           );
         })
+      ) : !allConnected && peers.length > 0 ? (
+        <Loader />
       ) : (
         <p className="empty-room">
           Seems Like no one's here yet, Invite people by sharing the link in the

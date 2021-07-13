@@ -1,11 +1,14 @@
 export const __prod__ = process.env.NODE_ENV === "production";
 
-export const iceServers = [
+export const iceServers: RTCIceServer[] = [
   { urls: "stun:stun.l.google.com:19302" },
-  { urls: "stun:stun1.l.google.com:19302" },
   { urls: "stun:stun2.l.google.com:19302" },
-  { urls: "stun:stun3.l.google.com:19302" },
   { urls: "stun:stun4.l.google.com:19302" },
+  {
+    urls: "turn:numb.viagenie.ca",
+    username: "nishitdua175@gmail.com",
+    credential: "password",
+  },
 ];
 
 export const UserMediaConstraints: MediaStreamConstraints = {

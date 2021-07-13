@@ -8,6 +8,7 @@ export type StateType = {
   isVideoOn: boolean;
   leaveVideoChatTrigger: boolean;
   chatRoomTrigger: boolean;
+  isSharingScreen: boolean;
 };
 
 export const initialState: StateType = {
@@ -15,6 +16,7 @@ export const initialState: StateType = {
   isVideoOn: true,
   leaveVideoChatTrigger: false,
   chatRoomTrigger: false,
+  isSharingScreen: false,
 };
 
 const AppProvider: React.FC = ({ children }) => {

@@ -10,7 +10,8 @@ type Actions =
   | "VIDEO-TOGGLE"
   | "DECONNECT-FROM-VIDEO"
   | "DISCONNECTED"
-  | "GO-TO-CHAT-ROOM";
+  | "GO-TO-CHAT-ROOM"
+  | "SHARE-SCREEN";
 
 export interface ReturnType extends StateType {
   dispatchApp: React.Dispatch<DispatchType>;
@@ -28,6 +29,8 @@ export const reducer = (state: StateType, action: DispatchType): StateType => {
       return { ...state, leaveVideoChatTrigger: false, chatRoomTrigger: false };
     case "GO-TO-CHAT-ROOM":
       return { ...state, leaveVideoChatTrigger: true, chatRoomTrigger: true };
+    case "SHARE-SCREEN":
+      return { ...state, isSharingScreen: !state.isSharingScreen };
     default:
       return state;
   }

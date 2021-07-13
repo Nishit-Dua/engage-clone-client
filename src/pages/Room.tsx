@@ -5,7 +5,7 @@ import TextChat from "../components/ChatLibrary";
 import "../styles/room.scss";
 import { BiChat } from "react-icons/bi";
 import { FiMic, FiMicOff, FiVideo, FiVideoOff } from "react-icons/fi";
-import { MdCallEnd } from "react-icons/md";
+import { MdCallEnd, MdScreenShare, MdStopScreenShare } from "react-icons/md";
 import { RiChatVoiceLine } from "react-icons/ri";
 import { useAppContext } from "../context/AppProvider";
 import { ToastContainer } from "react-toastify";
@@ -26,7 +26,7 @@ const socket = __prod__
 // const socket = io("https://engage-clone-server.herokuapp.com/");
 
 const Room: FC = () => {
-  const { isMicOn, isVideoOn, dispatchApp } = useAppContext();
+  const { isMicOn, isVideoOn, dispatchApp, isSharingScreen } = useAppContext();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [handsUp, setHandsUp] = useState(false);
 
@@ -90,6 +90,14 @@ const Room: FC = () => {
         >
           {handsUp ? "✊🏼" : "✋🏼"}
           <p className="tool-tip">Ask</p>
+        </button>
+        <button
+          onClick={() => {
+            dispatchApp({ type: "SHARE-SCREEN" });
+          }}
+        >
+          {isSharingScreen ? <MdScreenShare /> : <MdStopScreenShare />}
+          <p className="tool-tip">Screen</p>
         </button>
       </div>
       <ToastContainer onClick={() => setIsChatOpen(true)} />
